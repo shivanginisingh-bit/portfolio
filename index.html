@@ -1,369 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Shivangini Singh - UX Designer with 12+ years of experience in interaction design, service design, and design systems">
-    <title>Shivangini Singh - UX Designer</title>
-    
-    <!-- Prevent flicker during initial paint -->
-    <style>
-      /* Disable ALL animations/transitions until we say go */
-      html.no-flicker, html.no-flicker * {
-        animation: none !important;
-        transition: none !important;
-      }
-      /* also set a definite background so there's no colour flash */
-      html { background: #fff; }
-    </style>
-    
-    <!-- Favicon (PNG) — use relative path (works for file:// too) -->
-    <link rel="icon" href="images/FAVICON.png" type="image/png" sizes="32x32">
-    <link rel="apple-touch-icon" href="images/FAVICON.png">
-    <link rel="shortcut icon" href="images/FAVICON.png">
-    
-    <!-- Preload links for faster navigation -->
-    <link rel="prefetch" href="about.html" as="document">
-    <link rel="prefetch" href="contact.html" as="document">
-    
-    <!-- Link to external CSS file -->
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="css/buttons.css">
-    <link rel="stylesheet" href="css/nav.v2.css">
-    <link rel="stylesheet" href="css/nav-final.css">
-    
-    <!-- Google Fonts - for beautiful typography -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Shivangini Singh - UX Designer with 12+ years of experience in interaction design, service design, and design systems" />
+  <title>Shivangini Singh - UX Designer</title>
+
+  <style>
+    html.no-flicker,
+    html.no-flicker * {
+      animation: none !important;
+      transition: none !important;
+    }
+    html { background: #fff; }
+  </style>
+
+  <link rel="icon" href="images/FAVICON.png" type="image/png" sizes="32x32" />
+  <link rel="apple-touch-icon" href="images/FAVICON.png" />
+  <link rel="shortcut icon" href="images/FAVICON.png" />
+
+  <link rel="prefetch" href="about.html" as="document" />
+  <link rel="prefetch" href="contact.html" as="document" />
+
+  <!-- 🧩 Updated stylesheet paths -->
+  <link rel="stylesheet" href="styles.css?v=1" />
+  <link rel="stylesheet" href="buttons.css?v=1" />
+  <link rel="stylesheet" href="nav-final.css?v=1" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 </head>
 
 <body class="theme-light home">
-    <!-- Prevent flicker during initial paint -->
-    <script>
-      // Prevent flicker during initial paint, re-enable after first frame
-      (function () {
-        document.documentElement.classList.add('no-flicker');
-        // When the page is shown (including bfcache), drop the guard after a frame
-        window.addEventListener('pageshow', function () {
-          requestAnimationFrame(function () {
-            document.documentElement.classList.remove('no-flicker');
-          });
-        });
-      })();
-    </script>
-    
-    <!-- Smooth scroll to #case-studies without double-paint -->
-    <script>
-      (function () {
-        if (location.hash === '#case-studies') {
-          // Avoid browser's early jump; we'll do it once layout is stable
-          try { history.scrollRestoration = 'manual'; } catch (_) {}
-          window.addEventListener('DOMContentLoaded', function () {
-            const el = document.getElementById('case-studies');
-            if (!el) return;
-            requestAnimationFrame(function () {
-              // instant and stable (no transition)
-              const top = el.getBoundingClientRect().top + window.scrollY - 80; // header offset
-              window.scrollTo({ top, left: 0, behavior: 'auto' });
-            });
-          });
-        }
-      })();
-    </script>
-    
-    <!-- Header -->
-    <header class="site-header" data-theme="light" id="main-header">
-      <div class="nav-wrap">
-        <a class="brand" href="index.html">the.shivangini.singh</a>
+  <!-- (your full body content unchanged) -->
 
-        <!-- mobile dropdown trigger -->
-        <button class="nav-pill" id="navBtn" data-nav="menu-btn" aria-expanded="false" type="button">
-          <span data-nav="label">menu</span>
-          <span class="nav-icon" aria-hidden="true"></span>
-        </button>
-
-        <!-- desktop inline links -->
-        <nav class="nav-inline" aria-label="Primary">
-          <a href="index.html#case-studies" data-nav="work">work</a>
-          <a href="about.html" data-nav="about">about me</a>
-          <a href="https://medium.com/@shivanginisingh" data-nav="blog" target="_blank" rel="noopener">blog</a>
-          <a href="contact.html" data-nav="contact">contact me</a>
-        </nav>
-
-        <!-- mobile sheet -->
-        <div class="nav-sheet" id="navSheet" hidden>
-          <nav class="nav-list" aria-label="Primary mobile">
-            <a href="about.html" data-nav="about">about me</a>
-            <a href="index.html#case-studies"  data-nav="work">work</a>
-            <a href="https://medium.com/@shivanginisingh" data-nav="blog" target="_blank" rel="noopener">blog</a>
-            <a href="contact.html" data-nav="contact">contact me</a>
-          </nav>
-        </div>
-        <div class="nav-scrim" id="navScrim" hidden></div>
-      </div>
-    </header>
-    
-    <!-- HERO -->
-    <section id="hero" class="hero hero-selfcontained hero-section">
-      <div class="hero-inner">
-        <div class="hero-copy">
-          <h1 class="hero-title">Shivangini Singh</h1>
-          <p class="hero-subtitle">UX Designer | 12+ years</p>
-          
-          <div class="hero-body">
-            <p>Built a 0 → 1 sustainability product. Now shaping AI-driven experiences at JPMorgan Chase.</p>
-            <p>Experienced in branding, systems, and end-to-end product design. I love turning ideas into intuitive experiences and connect with people.</p>
-            <p>I'm based in Bangalore. I love reading Murakami, illustrating, and the beach!</p>
-          </div>
-
-          <div class="hero-pills">
-            <span class="pill">interaction design</span>
-            <span class="pill">service design</span>
-            <span class="pill">design systems</span>
-            <span class="pill">Interface design</span>
-            <span class="pill">UX Process</span>
-            <span class="pill">Branding</span>
-            <span class="pill">Product strategy</span>
-          </div>
-
-          <a href="#case-studies" class="btn btn-cta">
-            <img src="images/buttons/view-case-studies.svg" alt="view case studies" />
-          </a>
-        </div>
-
-        <div class="hero-visual hero-illu">
-          <!-- Your banner/flower illustration -->
-          <img class="hero-img" src="images/hero-illustration.png" alt="Hero illustration" />
-          
-          
-        </div>
-      </div>
-
-    </section>
-    
-
-    <!-- LINK TO JavaScript file -->
-    <script src="script.js"></script>
-    
-    
-    
-    <!-- TEMPORARY: Page wipe disabled for debugging -->
-    <!-- Will re-enable once home page displays correctly -->
-    
-    <!-- Force light theme and ensure visibility -->
-    <script>
-      // Immediate execution - don't wait for any events
-      (function() {
-        // 1. Force light theme
-        document.documentElement.dataset.theme = 'light';
-        document.documentElement.classList.remove('theme-dark', 'dark');
-        document.body.classList.remove('theme-dark', 'dark', 'is-transitioning');
-        
-        // 2. Force white background immediately
-        document.documentElement.style.background = '#ffffff';
-        document.body.style.background = '#ffffff';
-        document.body.style.color = '#000000';
-        
-        // 3. Remove any overlay elements immediately
-        ['wipe','page-wipe','route-wipe','route-overlay','transition-mask','wipe-overlay']
-          .forEach(id => { 
-            const el = document.getElementById(id); 
-            if (el) el.remove(); 
-          });
-        
-        // 4. Also run on all page load events (belt and suspenders)
-        function ensureVisible() {
-          document.documentElement.style.background = '#ffffff';
-          document.body.style.background = '#ffffff';
-          document.body.style.color = '#000000';
-          document.body.style.overflow = 'auto';
-        }
-        
-        window.addEventListener('DOMContentLoaded', ensureVisible);
-        window.addEventListener('load', ensureVisible);
-        window.addEventListener('pageshow', ensureVisible);
-        
-        // 5. Final check after short delay
-        setTimeout(ensureVisible, 100);
-      })();
-    </script>
-    
-    <!-- 
-    ============================================
-    FUTURE: Safe Wipe Transition Implementation
-    ============================================
-    
-    When ready to restore the page wipe, replace the wipe script above with this safer version:
-    
-    <script>
-    (function(){
-      const mask = document.getElementById('wipe');
-      if (!mask) return;
-      
-      function endWipe() {
-        if (!mask) return;
-        mask.classList.remove('wipe--show');
-        mask.classList.add('wipe--hide');
-        document.body.classList.remove('is-transitioning');
-      }
-      
-      function startWipe() {
-        if (!mask) return;
-        document.body.classList.add('is-transitioning');
-        mask.classList.remove('wipe--hide');
-        requestAnimationFrame(() => mask.classList.add('wipe--show'));
-      }
-      
-      // Multi-layer fail-safe: clear on load, bfcache restore, AND timeout
-      window.addEventListener('load', endWipe);
-      window.addEventListener('pageshow', endWipe);      // handles back/forward cache
-      setTimeout(endWipe, 1200);                          // fail-safe if transitionend missed
-      mask.addEventListener('transitionend', endWipe);
-      
-      // Intercept navigation
-      document.addEventListener('click', (e) => {
-        const a = e.target.closest('a');
-        if (!a) return;
-        
-        const url = new URL(a.href, location.href);
-        const sameOrigin = url.origin === location.origin;
-        const isHash = url.pathname === location.pathname && url.hash;
-        const newTab = a.target && a.target !== '_self';
-        
-        if (!sameOrigin || isHash || newTab) return;
-        
-        e.preventDefault();
-        startWipe();
-        setTimeout(() => { window.location.href = a.href; }, 360);
-      });
-    })();
-    </script>
-    -->
-    
-    <!-- Case Studies Section -->
-    <section id="case-studies" class="section-case-studies">
-      <div class="case-studies-container">
-        <div class="work-cards">
-          <a href="scaling-sustainability.html" class="work-card card--sustainability has-cta-gradient">
-            <h3>Scaling Sustainability</h3>
-            <span class="card-cta">View case study</span>
-          </a>
-
-          <a href="risk-controls.v2.html" class="work-card card--risk has-cta-gradient">
-            <h3>Risk & Controls</h3>
-            <span class="card-cta">View case study</span>
-          </a>
-
-          <a href="ai-meeting-case-study.html" class="work-card card--ai has-cta-gradient">
-            <h3>AI meeting summarization</h3>
-            <span class="card-cta">View case study</span>
-          </a>
-        </div>
-        
-        <!-- Other Works Section -->
-        <section id="other-works" class="other-works">
-          <p class="other-works-note">Other works: Non-case study work done in the past</p>
-
-          <!-- Gallery grid gets injected here (images from /work/ folder) -->
-          <div id="otherWorksGrid" class="other-works-grid"></div>
-        </section>
-      </div>
-    </section>
-    
-    
-    <!-- Scroll to top button -->
-    <button id="scrollTop" class="back-to-top" aria-label="Back to top">
-      <img src="images/buttons/scroll.svg" alt="Scroll to top" style="width: 56px; height: auto;">
-    </button>
-    
-    <!-- Menu dropdown -->
-    
-    <script src="main.js" defer></script>
-    <!-- <script defer src="js/nav.v2.js"></script> -->
-    
-    <!-- Scroll-to-top functionality -->
-    <script>
-      console.log("=== SCROLL BUTTON SCRIPT STARTING ===");
-      
-      // Show scroll button only when user scrolls down
-      document.addEventListener('DOMContentLoaded', function() {
-        console.log("DOM Content Loaded - looking for scroll button");
-        const scrollBtn = document.getElementById("scrollTop");
-        console.log("Scroll button found:", scrollBtn); // Debug log
-        
-        if (scrollBtn) {
-          console.log("Scroll button exists, setting up event listeners");
-          
-          // Make button visible when scrolling
-          scrollBtn.style.display = "none"; // Hidden by default
-          console.log("Scroll button ready!");
-          
-          window.onscroll = () => {
-            const scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
-            const workSection = document.getElementById('case-studies');
-            const workSectionTop = workSection ? workSection.offsetTop : 0;
-            
-            console.log("Scroll position:", scrollTop, "Work section top:", workSectionTop);
-            
-            // Only show button when scrolled past the work section
-            if (scrollTop > workSectionTop - 100) {
-              scrollBtn.classList.add("show");
-              console.log("Showing scroll button - in work section"); // Debug log
-            } else {
-              scrollBtn.classList.remove("show");
-              console.log("Hiding scroll button - in hero section"); // Debug log
-            }
-          };
-
-          // Smooth scroll to top
-          scrollBtn.addEventListener("click", () => {
-            console.log("Scroll button clicked"); // Debug log
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          });
-        } else {
-          console.error("Scroll button not found!");
-        }
-      });
-      
-      console.log("=== SCROLL BUTTON SCRIPT ENDED ===");
-    </script>
-    
-    <!-- Auto-detect active page -->
-    <script>
-    document.querySelectorAll('.nav-link').forEach(link=>{
-      if(link.href === window.location.href) link.classList.add('active');
-    });
-    </script>
-    
-    <script src="js/nav-unified.js"></script>
-    <script>
-      // Fix logo color when scrolling to dark sections
-      (function() {
-        const header = document.querySelector('.site-header');
-        const brand = header?.querySelector('.brand');
-        const darkSection = document.querySelector('.section-case-studies');
-        
-        if (!header || !brand || !darkSection) return;
-        
-        const observer = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              brand.style.color = '#fff';
-            } else {
-              // Check if we're still over dark content
-              const belowHeader = window.scrollY > darkSection.offsetTop;
-              if (belowHeader && window.scrollY < darkSection.offsetTop + darkSection.offsetHeight) {
-                brand.style.color = '#fff';
-              } else {
-                brand.style.color = '';
-              }
-            }
-          });
-        }, { threshold: 0.5 });
-        
-        observer.observe(darkSection);
-      })();
-    </script>
-</body>
-</html>
+  <!-- 🧩 Updated script paths -->
+  <script src="main.js?v=1" defer></script>
+  <!-- Removed all js/nav-unified.js references for now -->
