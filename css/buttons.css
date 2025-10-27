@@ -1,0 +1,84 @@
+/* Reusable Button System */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1.2px solid currentColor;
+  border-radius: 9999px;
+  padding: 6px 14px;
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  color: #000;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.button img {
+  width: 16px;
+  height: 16px;
+}
+
+.button:hover {
+  transform: translateY(-1px);
+  opacity: 0.8;
+}
+
+/* Case study theme variations */
+/* Scaling Sustainability */
+.theme-sustainability .button {
+  color: #39cdd8;
+}
+
+/* AI Summarisation */
+.theme-ai .button {
+  color: #cba866;
+}
+
+/* Risk & Controls */
+.theme-risk .button {
+  color: #cbb9ff;
+}
+
+/* Close button specific styling */
+.button--close {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 9999;
+  height: 44px;
+  min-width: 44px;
+  padding: 0 20px;
+  border-radius: 22px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.button--close img {
+  width: 16px;
+  height: 16px;
+}
+
+.button--close span {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .button--close {
+    top: 16px;
+    right: 16px;
+    height: 40px;
+    min-width: 40px;
+    padding: 0 16px;
+    font-size: 13px;
+    border-radius: 20px;
+  }
+}
+
+
