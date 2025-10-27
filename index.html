@@ -25,10 +25,12 @@
   <link rel="prefetch" href="about.html" as="document" />
   <link rel="prefetch" href="contact.html" as="document" />
 
-  <!-- ✅ Updated stylesheet paths -->
-  <link rel="stylesheet" href="styles.css?v=1" />
-  <link rel="stylesheet" href="buttons.css?v=1" />
-  <link rel="stylesheet" href="nav-final.css?v=1" />
+  <!-- ✅ Hard-linked working styles -->
+  <link rel="stylesheet" href="https://portfolio-gamma-nine-g041dc9zyp.vercel.app/nav-final.css" />
+  <link rel="stylesheet" href="https://portfolio-gamma-nine-g041dc9zyp.vercel.app/buttons.css" />
+
+  <!-- Optional main stylesheet if you have one -->
+  <link rel="stylesheet" href="https://portfolio-gamma-nine-g041dc9zyp.vercel.app/styles.css" />
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -37,30 +39,15 @@
 </head>
 
 <body class="theme-light home">
-  <!-- Disable flicker -->
-  <script>
-    (function () {
-      document.documentElement.classList.add('no-flicker');
-      window.addEventListener('pageshow', function () {
-        requestAnimationFrame(function () {
-          document.documentElement.classList.remove('no-flicker');
-        });
-      });
-    })();
-  </script>
-
-  <!-- Header -->
   <header class="site-header" data-theme="light" id="main-header">
     <div class="nav-wrap">
       <a class="brand" href="index.html">the.shivangini.singh</a>
 
-      <!-- mobile dropdown trigger -->
       <button class="nav-pill" id="navBtn" data-nav="menu-btn" aria-expanded="false" type="button">
         <span data-nav="label">menu</span>
         <span class="nav-icon" aria-hidden="true"></span>
       </button>
 
-      <!-- desktop inline links -->
       <nav class="nav-inline" aria-label="Primary">
         <a href="index.html#case-studies" data-nav="work">work</a>
         <a href="about.html" data-nav="about">about me</a>
@@ -68,11 +55,10 @@
         <a href="contact.html" data-nav="contact">contact me</a>
       </nav>
 
-      <!-- mobile sheet -->
       <div class="nav-sheet" id="navSheet" hidden>
         <nav class="nav-list" aria-label="Primary mobile">
           <a href="about.html" data-nav="about">about me</a>
-          <a href="index.html#case-studies"  data-nav="work">work</a>
+          <a href="index.html#case-studies" data-nav="work">work</a>
           <a href="https://medium.com/@shivanginisingh" data-nav="blog" target="_blank" rel="noopener">blog</a>
           <a href="contact.html" data-nav="contact">contact me</a>
         </nav>
@@ -81,7 +67,6 @@
     </div>
   </header>
 
-  <!-- Hero -->
   <section id="hero" class="hero hero-selfcontained hero-section">
     <div class="hero-inner">
       <div class="hero-copy">
@@ -115,7 +100,6 @@
     </div>
   </section>
 
-  <!-- Case Studies Section -->
   <section id="case-studies" class="section-case-studies">
     <div class="case-studies-container">
       <div class="work-cards">
@@ -142,12 +126,11 @@
     </div>
   </section>
 
-  <!-- Scroll to top -->
   <button id="scrollTop" class="back-to-top" aria-label="Back to top">
     <img src="images/buttons/scroll.svg" alt="Scroll to top" style="width: 56px; height: auto;">
   </button>
 
-  <!-- ✅ Updated script paths -->
-  <script src="main.js?v=1" defer></script>
+  <!-- ✅ Working JS file -->
+  <script src="https://portfolio-gamma-nine-g041dc9zyp.vercel.app/main.js" defer></script>
 </body>
 </html>
