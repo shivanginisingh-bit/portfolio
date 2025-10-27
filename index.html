@@ -6,6 +6,7 @@
   <meta name="description" content="Shivangini Singh - UX Designer with 12+ years of experience in interaction design, service design, and design systems" />
   <title>Shivangini Singh - UX Designer</title>
 
+  <!-- Prevent flicker during initial paint -->
   <style>
     html.no-flicker,
     html.no-flicker * {
@@ -15,26 +16,138 @@
     html { background: #fff; }
   </style>
 
+  <!-- Favicons -->
   <link rel="icon" href="images/FAVICON.png" type="image/png" sizes="32x32" />
   <link rel="apple-touch-icon" href="images/FAVICON.png" />
   <link rel="shortcut icon" href="images/FAVICON.png" />
 
+  <!-- Prefetch -->
   <link rel="prefetch" href="about.html" as="document" />
   <link rel="prefetch" href="contact.html" as="document" />
 
-  <!-- 🧩 Updated stylesheet paths -->
+  <!-- ✅ Updated stylesheet paths -->
   <link rel="stylesheet" href="styles.css?v=1" />
   <link rel="stylesheet" href="buttons.css?v=1" />
   <link rel="stylesheet" href="nav-final.css?v=1" />
 
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 </head>
 
 <body class="theme-light home">
-  <!-- (your full body content unchanged) -->
+  <!-- Disable flicker -->
+  <script>
+    (function () {
+      document.documentElement.classList.add('no-flicker');
+      window.addEventListener('pageshow', function () {
+        requestAnimationFrame(function () {
+          document.documentElement.classList.remove('no-flicker');
+        });
+      });
+    })();
+  </script>
 
-  <!-- 🧩 Updated script paths -->
+  <!-- Header -->
+  <header class="site-header" data-theme="light" id="main-header">
+    <div class="nav-wrap">
+      <a class="brand" href="index.html">the.shivangini.singh</a>
+
+      <!-- mobile dropdown trigger -->
+      <button class="nav-pill" id="navBtn" data-nav="menu-btn" aria-expanded="false" type="button">
+        <span data-nav="label">menu</span>
+        <span class="nav-icon" aria-hidden="true"></span>
+      </button>
+
+      <!-- desktop inline links -->
+      <nav class="nav-inline" aria-label="Primary">
+        <a href="index.html#case-studies" data-nav="work">work</a>
+        <a href="about.html" data-nav="about">about me</a>
+        <a href="https://medium.com/@shivanginisingh" data-nav="blog" target="_blank" rel="noopener">blog</a>
+        <a href="contact.html" data-nav="contact">contact me</a>
+      </nav>
+
+      <!-- mobile sheet -->
+      <div class="nav-sheet" id="navSheet" hidden>
+        <nav class="nav-list" aria-label="Primary mobile">
+          <a href="about.html" data-nav="about">about me</a>
+          <a href="index.html#case-studies"  data-nav="work">work</a>
+          <a href="https://medium.com/@shivanginisingh" data-nav="blog" target="_blank" rel="noopener">blog</a>
+          <a href="contact.html" data-nav="contact">contact me</a>
+        </nav>
+      </div>
+      <div class="nav-scrim" id="navScrim" hidden></div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section id="hero" class="hero hero-selfcontained hero-section">
+    <div class="hero-inner">
+      <div class="hero-copy">
+        <h1 class="hero-title">Shivangini Singh</h1>
+        <p class="hero-subtitle">UX Designer | 12+ years</p>
+
+        <div class="hero-body">
+          <p>Built a 0 → 1 sustainability product. Now shaping AI-driven experiences at JPMorgan Chase.</p>
+          <p>Experienced in branding, systems, and end-to-end product design. I love turning ideas into intuitive experiences and connect with people.</p>
+          <p>I'm based in Bangalore. I love reading Murakami, illustrating, and the beach!</p>
+        </div>
+
+        <div class="hero-pills">
+          <span class="pill">interaction design</span>
+          <span class="pill">service design</span>
+          <span class="pill">design systems</span>
+          <span class="pill">interface design</span>
+          <span class="pill">ux process</span>
+          <span class="pill">branding</span>
+          <span class="pill">product strategy</span>
+        </div>
+
+        <a href="#case-studies" class="btn btn-cta">
+          <img src="images/buttons/view-case-studies.svg" alt="view case studies" />
+        </a>
+      </div>
+
+      <div class="hero-visual hero-illu">
+        <img class="hero-img" src="images/hero-illustration.png" alt="Hero illustration" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Case Studies Section -->
+  <section id="case-studies" class="section-case-studies">
+    <div class="case-studies-container">
+      <div class="work-cards">
+        <a href="scaling-sustainability.html" class="work-card card--sustainability has-cta-gradient">
+          <h3>Scaling Sustainability</h3>
+          <span class="card-cta">View case study</span>
+        </a>
+
+        <a href="risk-controls.v2.html" class="work-card card--risk has-cta-gradient">
+          <h3>Risk & Controls</h3>
+          <span class="card-cta">View case study</span>
+        </a>
+
+        <a href="ai-meeting-case-study.html" class="work-card card--ai has-cta-gradient">
+          <h3>AI meeting summarization</h3>
+          <span class="card-cta">View case study</span>
+        </a>
+      </div>
+
+      <section id="other-works" class="other-works">
+        <p class="other-works-note">Other works: Non-case study work done in the past</p>
+        <div id="otherWorksGrid" class="other-works-grid"></div>
+      </section>
+    </div>
+  </section>
+
+  <!-- Scroll to top -->
+  <button id="scrollTop" class="back-to-top" aria-label="Back to top">
+    <img src="images/buttons/scroll.svg" alt="Scroll to top" style="width: 56px; height: auto;">
+  </button>
+
+  <!-- ✅ Updated script paths -->
   <script src="main.js?v=1" defer></script>
-  <!-- Removed all js/nav-unified.js references for now -->
+</body>
+</html>
