@@ -1,0 +1,125 @@
+/* === Risk & Controls: safe, scoped fixes (additive only) === */
+
+/* Layout tokens */
+:root {
+  --rc-w: 1200px;
+  --rc-pad: 24px;
+  --rc-12: 12px;
+  --rc-24: 24px;
+  --rc-36: 36px;
+  --rc-ink: #fff;
+  --rc-ink-inv: #111;
+  --rc-lilac: #efe8fb;
+}
+
+/* Generic helpers scoped to RC sections */
+.rc-impact, .rc-challenge, .rc-vision, .rc-process, .rc-usability {
+  color: var(--rc-ink);
+  text-align: left !important;
+  max-width: var(--rc-w);
+  margin: 0 auto;
+  padding: var(--rc-36) var(--rc-pad);
+}
+
+.rc-impact *,.rc-challenge *,.rc-vision *,.rc-process *,.rc-usability *{
+  box-sizing: border-box;
+}
+
+/* Images behave, align and fill content width */
+.rc-impact img, .rc-vision img, .rc-process img, .rc-usability img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px; /* remove if you don't want rounding */
+}
+
+/* 1) IMPACT — left-align, three neat columns; kill "pill" backgrounds */
+.rc-impact .metric, .rc-impact p, .rc-impact li {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+.rc-impact .metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--rc-24);
+}
+.rc-impact .metric__big {
+  font-weight: 700;
+  font-size: 1.125rem;
+  margin: 0 0 var(--rc-12);
+}
+.rc-impact ul { margin: 0; padding-left: 1.1em; }
+.rc-impact li { margin: 0 0 .6em; }
+
+/* 2) CHALLENGE — lilac card with black body text, full content width */
+.rc-challenge .card {
+  background: var(--rc-lilac);
+  color: var(--rc-ink-inv);
+  padding: var(--rc-24);
+  border-radius: 16px;
+}
+
+/* 3) VISION & GOAL — same lilac cards; numbers purple; body black */
+.rc-vision .goals {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--rc-24);
+}
+.rc-vision .goal {
+  background: var(--rc-lilac);
+  color: var(--rc-ink-inv);
+  padding: var(--rc-24);
+  border-radius: 16px;
+}
+.rc-vision .goal__n {
+  color: #bba0ff; /* brand-ish purple */
+  font-weight: 800;
+  font-size: 1.25rem;
+  margin-bottom: var(--rc-12);
+}
+/* tighten spacing between vision and process */
+.rc-vision { padding-bottom: var(--rc-24); }
+.rc-process { padding-top: var(--rc-24); }
+
+/* 4) PROCESS — text card + big flow image aligned to the same left */
+.rc-process .card {
+  background: var(--rc-lilac);
+  color: var(--rc-ink-inv);
+  padding: var(--rc-24);
+  border-radius: 16px;
+  margin-bottom: var(--rc-24);
+}
+
+/* 5) USABILITY — 2 columns with a firm 12px gap */
+.rc-usability .grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: var(--rc-12); /* your "minimum 12px" */
+  align-items: start;
+}
+.rc-usability ul { margin: 0; padding-left: 1.1em; }
+.rc-usability li { margin: 0 0 .6em; }
+
+/* 6) DISCLAIMER — align to the same left, full content width */
+.rc-disclaimer, .rc-disclaimer * {
+  max-width: var(--rc-w);
+  margin: 0 auto;
+  padding: var(--rc-36) var(--rc-pad);
+  color: var(--rc-ink);
+  opacity: .85;
+}
+
+/* 7) WATERMARK — show once at bottom; hide any sticky clones */
+.sticky-watermark, .watermark.sticky { display: none !important; }
+.rc-watermark {
+  max-width: var(--rc-w);
+  margin: 64px auto 24px;
+  padding: 0 var(--rc-pad);
+  color: var(--rc-ink);
+  opacity: .7;
+  font-size: .9rem;
+}
+
+/* Safety: no center alignment sneaking back in */
+.rc-impact h2, .rc-challenge h2, .rc-vision h2, .rc-process h2, .rc-usability h2 { text-align: left !important; }

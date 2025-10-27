@@ -1,0 +1,63 @@
+/* ---------- Reusable nav styles ---------- */
+[hidden] { display: none !important; }
+
+.site-header[data-nav="root"] {
+  position: sticky; top: 0; z-index: 1200;
+  background: var(--hdr-bg, #fff);
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1rem 2rem;
+}
+
+/* brand stays readable on dark pages too; override per page if needed */
+.site-header .brand {
+  color: var(--brand-color, #000);
+  text-decoration: none; font-weight: 700; font-size: 1.25rem;
+}
+
+.nav-pill[data-nav="menu-btn"] {
+  display: inline-flex; align-items: center; gap: .6rem;
+  border: 2px solid #000; border-radius: 999px; padding: .6rem 1rem;
+  background: #fff; color: #000; cursor: pointer;
+}
+
+.nav-pill [data-nav="label"] { font-weight: 600; }
+
+#navDropdown[data-nav="dropdown"] {
+  position: absolute; right: 1rem; top: 64px;
+  width: min(18rem, 90vw);
+  background: #fff; color: #000;
+  border: 2px solid #000; border-radius: 1.25rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,.12);
+  padding: .85rem; z-index: 1199;
+}
+
+#navDropdown a {
+  display: flex; align-items: center;
+  min-height: 44px; /* good tap target */
+  padding: 10px 16px; margin: .2rem 0;
+  border-radius: .9rem; text-decoration: none; color: inherit; font-weight: 700;
+  line-height: 1.2;
+}
+
+/* Optional thin separators look (using box-shadow for crisp lines) */
+#navDropdown li + li a {
+  box-shadow: 0 -1px 0 rgba(0,0,0,.06) inset;
+}
+
+#navDropdown a:hover,
+#navDropdown a:focus-visible {
+  outline: none;
+  background: #f3efe2; /* your golden hint */
+  box-shadow: 0 0 0 2px #b8902b inset;
+}
+
+[data-nav="scrim"] {
+  position: fixed; inset: 0; background: rgba(0,0,0,.06);
+  z-index: 1100;
+}
+
+/* swap icons by state */
+[data-nav="menu-btn"][aria-expanded="true"]  [data-nav="icon-burger"] { display: none; }
+[data-nav="menu-btn"][aria-expanded="true"]  [data-nav="icon-close"]  { display: inline; }
+[data-nav="menu-btn"][aria-expanded="false"] [data-nav="icon-burger"] { display: inline; }
+[data-nav="menu-btn"][aria-expanded="false"] [data-nav="icon-close"]  { display: none; }

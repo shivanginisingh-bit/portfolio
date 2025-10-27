@@ -1,0 +1,790 @@
+/* ===== FINAL NAV CLEANUP & NORMALIZATION (non-destructive) ===== */
+
+/* 0) Variables */
+:root {
+  --header-h: 72px;                 /* desktop header height */
+  --header-h-sm: 64px;              /* mobile header height */
+  --rail: 24px;                     /* page gutter/rail */
+  --nav-radius: 22px;
+  --nav-elev: 0 10px 30px rgba(0,0,0,.12);
+  --nav-panel-bg: #fff;
+  --nav-border: 1.5px solid #111;
+  --scrim: rgba(0,0,0,.06);
+  --gold: #C79B2E;                  /* your highlight */
+}
+
+/* 1) Kill legacy blur & weak header stacks anywhere */
+.site-header,
+header {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 1100 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  filter: none !important;
+}
+
+/* Some pages set lower z-index; override all variants */
+.site-header[data-variant],
+.site-header.is-sticky,
+.site-header--sticky {
+  z-index: 1100 !important;
+}
+
+/* 2) Neutralize legacy/duplicate nav systems (don't delete yet) */
+.nav-sheet,
+.nav-drawer,
+.nav-scrim,
+.legacy-nav,
+.navToggle,
+.hamburger-wrap {
+  display: none !important;
+}
+
+/* 3) Pill menu button (your visual) */
+.menu-btn,
+.nav-toggle,
+#menuBtn {
+  position: fixed !important;
+  right: max(16px, env(safe-area-inset-right));
+  top: calc(var(--header-h-sm) * .3);
+  transform: translateY(0);  /* prevent drift */
+  z-index: 1200 !important;  /* sits above header */
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  background: #fff;
+  border: 1.5px solid #111;
+  border-radius: 999px;
+  box-shadow: var(--nav-elev);
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.menu-btn svg,
+.menu-btn img { pointer-events: none; }
+
+/* Remove any accidental icon pseudo-elements that duplicate the glyph */
+.menu-btn::before,
+.menu-btn::after,
+.nav-toggle::before,
+.nav-toggle::after { content: none !important; }
+
+/* Desktop pushes pill closer to header top */
+@media (min-width: 880px) {
+  .menu-btn, .nav-toggle, #menuBtn {
+    top: 12px;
+  }
+}
+
+/* 4) Dropdown panel (right aligned, rounded, large links) */
+.menu-dropdown,
+#menuDropdown,
+.nav-dropdown {
+  position: fixed !important;
+  right: max(16px, env(safe-area-inset-right));
+  top: calc(var(--header-h) + 8px);
+  width: min(340px, calc(100vw - 2*var(--rail)));
+  max-height: calc(100dvh - var(--header-h) - 24px);
+  overflow: auto;
+  background: var(--nav-panel-bg);
+  border: var(--nav-border);
+  border-radius: 28px;
+  box-shadow: var(--nav-elev);
+  padding: 18px 20px 12px;
+  z-index: 1201 !important;
+  display: none;                 /* toggled via JS */
+}
+
+.menu-dropdown.open { display: block !important; }
+
+/* Large, simple list */
+.menu-dropdown ul { list-style: none; margin: 8px 0 4px; padding: 0; }
+.menu-dropdown li + li { margin-top: 14px; }
+.menu-dropdown a {
+  display: block;
+  font-weight: 800;
+  font-size: clamp(20px, 3.4vw, 32px);
+  text-decoration: none;
+  color: inherit;
+  padding: 4px 2px;
+  border-radius: 10px;
+}
+.menu-dropdown a[aria-current="page"] { color: var(--gold); }
+
+/* 5) Scrim (no blur) */
+.menu-scrim,
+#menuScrim {
+  position: fixed;
+  inset: 0;
+  background: var(--scrim);
+  z-index: 1199 !important;
+  display: none;
+}
+.menu-scrim.open { display: block; }
+
+/* 6) Body scroll lock */
+body.nav-open { overflow: hidden; }
+
+/* 7) Header link row on desktop (your reference) */
+@media (min-width: 1100px) {
+  .site-header .nav-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 12px max(24px, env(safe-area-inset-right)) 12px max(24px, env(safe-area-inset-left));
+  }
+  .site-header .brand { font-weight: 800; }
+  .site-header .nav-links {
+    display: flex; gap: clamp(24px, 5vw, 64px);
+    align-items: center;
+  }
+  .site-header .nav-links a[aria-current="page"] { color: var(--gold); }
+}
+
+/* 8) Respect dark hero sections (if any) */
+.is-dark .menu-btn { background: #111; color: #fff; border-color: #fff; }
+.is-dark .menu-dropdown { background: #111; color: #fff; border-color: #fff; }
+
+
+/* === Ensure dropdown/scrim render correctly === */
+[data-nav="menu-scrim"].nav-scrim, [data-nav="menu-scrim"]{
+  position: fixed; inset: 0; background: rgba(0,0,0,.25);
+  opacity: 0; pointer-events: none; transition: opacity .15s; z-index: 10009;
+}
+
+.nav-dropdown, [data-nav="menu-panel"]{
+  position: fixed; right: 20px; top: 64px; min-width: 240px;
+  background: rgba(0,0,0,.92); color: #fff; border-radius: 14px; padding: 8px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.35);
+  opacity: 0; pointer-events: none; transform: translateY(-4px);
+  transition: opacity .15s, transform .15s; z-index: 10010;
+}
+
+.nav-dropdown.is-open, [data-nav="menu-panel"].is-open{
+  opacity: 1; pointer-events: auto; transform: translateY(0);
+}
+
+.nav-dd-list{ list-style: none; margin: 0; padding: 6px; display: grid; gap: 2px; }
+.nav-dd-list a{ display: flex; align-items: center; min-height: 44px; padding: 10px 16px; border-radius: 12px; color: inherit; text-decoration: none; }
+.nav-dd-list a:hover, .nav-dd-list a:focus-visible{ background: rgba(255,255,255,.08); }
+
+
+/* === Ensure the dropdown shows when JS adds .is-open === */
+[data-nav="menu-panel"]{
+  position: fixed; right: 20px; top: 72px; min-width: 240px;
+  background: rgba(0,0,0,.92); color:#fff; border-radius:14px; padding:8px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.35);
+  opacity: 0; pointer-events: none; transform: translateY(-4px);
+  transition: opacity .15s, transform .15s; z-index: 10010;
+}
+[data-nav="menu-panel"].is-open{
+  opacity: 1; pointer-events: auto; transform: translateY(0);
+}
+[data-nav="menu-scrim"]{
+  position: fixed; inset: 0; background: rgba(0,0,0,.25);
+  opacity: 0; pointer-events: none; transition: opacity .15s; z-index: 10009;
+}
+[data-nav="menu-scrim"].is-open{ opacity: 1; pointer-events: auto; }
+
+/* Comfortable tap targets + separators */
+.nav-dd-list{ list-style:none; margin:0; padding:6px; display:grid; gap:2px; }
+.nav-dd-list a{ display:flex; align-items:center; min-height:44px; padding:10px 16px; border-radius:12px; color:inherit; text-decoration:none; }
+.nav-dd-list a:hover, .nav-dd-list a:focus-visible{ background: rgba(255,255,255,.08); }
+.nav-dd-list li + li a{ box-shadow: inset 0 1px 0 rgba(255,255,255,.08); }
+
+/* Desktop: hide pill, show inline; Mobile opposite (keep if you want pill hidden on desktop) */
+.nav-inline{ display:none; }
+@media (max-width:800px){ .nav-pill{ display:inline-flex !important; } .nav-inline{ display:none !important; } }
+@media (min-width:801px){ .nav-pill{ display:none !important; } .nav-inline{ display:flex !important; gap:40px; align-items:center; } }
+
+/* About theme: render stable colors from CSS (no JS writes) */
+.page--about .site-header,
+.page--about .logo { color: #fff; }
+
+/* Avoid color/opacity flicker on first render for key elements */
+.site-header, .logo, .nav-inline a, .nav-pill {
+  transition-property: none;  /* transitions are great after load, but most flicker is color/opacity on first paint */
+}
+
+@media (prefers-reduced-motion: no-preference){
+  /* Re-enable tasteful transitions after first paint via a scope class, if you like */
+  html:not(.no-flicker) .site-header,
+  html:not(.no-flicker) .logo,
+  html:not(.no-flicker) .nav-inline a,
+  html:not(.no-flicker) .nav-pill {
+    transition: color .18s, background-color .18s, opacity .18s, transform .18s;
+  }
+}
+
+/* Keep anchored sections from rendering under the sticky header */
+#case-studies { scroll-margin-top: 80px; }
+
+
+/* === Increase space between navigation header and About section === */
+.page--about main,
+.page--about .about-section,
+.page--about .intro,
+.page--about .hero {
+  margin-top: 80px !important;  /* adds breathing space */
+}
+
+/* Optional — smoother transition on smaller screens */
+@media (max-width: 768px) {
+  .page--about main,
+  .page--about .about-section,
+  .page--about .intro,
+  .page--about .hero {
+    margin-top: 60px !important;
+  }
+}
+
+
+/* === Increase space between navigation header and About section === */
+.page--about .about-hero,
+.page--about .about-hero.container {
+  margin-top: 80px !important;
+  padding-top: 80px !important;
+}
+
+@media (max-width: 768px) {
+  .page--about .about-hero,
+  .page--about .about-hero.container {
+    margin-top: 60px !important;
+    padding-top: 60px !important;
+  }
+}
+
+
+/* === Fix z-index layering for Work Cards === */
+.work-card,
+.case-study-card,
+.section-case-studies .card {
+  position: relative;
+  z-index: 5; /* ensures card sits above any background or stray text */
+  overflow: hidden; /* hides anything leaking inside the rounded corners */
+}
+
+/* Just in case there's a global paragraph or text layer sitting above */
+.section-case-studies,
+.section-case-studies * {
+  position: relative;
+  z-index: 1;
+}
+
+
+/* === Force work cards above everything === */
+.work-card,
+.case-study-card,
+.section-case-studies .card,
+.section-case-studies article,
+.section-case-studies .work-card,
+.section-case-studies .case-card,
+.section-case-studies .project-card {
+  position: relative !important;
+  z-index: 10 !important;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+/* Ensure section container doesn't interfere */
+.section-case-studies {
+  position: relative;
+  z-index: 1;
+}
+
+
+/* === WORK CARDS: put title at top-left and make it 4px smaller === */
+.section-case-studies .case-card,
+.section-case-studies .project-card,
+.section-case-studies .work-card,
+#case-studies .card {
+  position: relative;          /* anchor for the absolute title */
+  overflow: hidden;            /* keep content inside rounded corners */
+  z-index: 2;
+}
+
+/* Target typical title elements inside a card */
+.section-case-studies .card-title,
+.section-case-studies .case-title,
+.section-case-studies .project-title,
+#case-studies .card h3,
+#case-studies .card .title {
+  position: absolute !important;
+  top: 8px;                    /* move to the top */
+  left: 12px;                  /* slight inset for breathing room */
+  margin: 0 !important;
+  line-height: 1.2;
+  z-index: 6;                  /* ensure it sits above bg/illustrations */
+  /* ↓ 4px smaller than whatever computed size is; fallback to a sane clamp */
+  font-size: clamp(12px, calc(1rem - 4px), 18px) !important;
+  /* If you prefer a fixed size instead of relative, uncomment one line:
+     font-size: 16px !important;    /* example: if current is ~20px */
+  /* optional: subtle chip look for contrast on busy thumbnails */
+  /* background: rgba(0,0,0,.45);
+     color: #fff;
+     padding: 4px 8px;
+     border-radius: 10px; */
+}
+
+/* Make sure any decorative big text sits behind the title */
+.section-case-studies .bg-title,
+.section-case-studies .bg-text,
+#case-studies .bg-text {
+  position: relative;
+  z-index: 1;
+}
+
+/* === ABOUT PAGE TAGS: make them non-clickable (visual only) === */
+.page--about .tag,
+.page--about .tags a,
+.page--about .skills a,
+.page--about .about-tags a {
+  pointer-events: none;
+  cursor: default;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Optional: extra breathing room under the navbar on About */
+.page--about main,
+.page--about .about-section,
+.page--about .intro,
+.page--about .hero { margin-top: 80px !important; }
+@media (max-width: 768px){
+  .page--about main,
+  .page--about .about-section,
+  .page--about .intro,
+  .page--about .hero { margin-top: 60px !important; }
+}
+
+
+/* === Hide overlay text titles (they're inside the PNG already) === */
+.section-case-studies .card-title,
+.section-case-studies .project-title,
+.section-case-studies .case-title,
+#case-studies .card h3,
+#case-studies .card .title {
+  display: none !important;
+  visibility: hidden;
+}
+
+/* Alternative: Hide visually but keep accessible for screen readers */
+.section-case-studies .card-title,
+.section-case-studies .project-title,
+.section-case-studies .case-title,
+#case-studies .card h3,
+#case-studies .card .title {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  border: 0;
+}
+
+
+/* === Work card hover overlay "View case study" === */
+.work-card::after {
+  content: "View case study";
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 14px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.work-card:hover::after {
+  opacity: 1;
+}
+
+
+/* === 1) Hide any HTML titles inside work cards === */
+a.work-card h3,
+.work-card h3,
+[class*="work-card"] h3,
+#case-studies .card h3,
+#case-studies .card .title {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+/* === 2) Remove any generated text via pseudo-elements === */
+a.work-card::before,
+a.work-card::after,
+.work-card::before,
+.work-card::after,
+[class*="work-card"]::before,
+[class*="work-card"]::after {
+  content: none !important;
+  display: none !important;
+}
+
+
+/* === Work card hover fix === */
+.work-card,
+.case-card {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  z-index: 0;
+}
+
+.work-card::after,
+.case-card::after {
+  content: "View case study";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.65) 100%);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Show text on hover */
+.work-card:hover::after,
+.case-card:hover::after {
+  opacity: 1;
+}
+
+/* Ensure card image stays underneath */
+.work-card img,
+.case-card img {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.4s ease;
+  z-index: 1;
+}
+
+.work-card:hover img,
+.case-card:hover img {
+  transform: scale(1.03);
+}
+
+
+/* === Case Study Hover Overlay: Gold Luxe Edition === */
+.work-card,
+.case-card {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  z-index: 0;
+  border-radius: 40px; /* match your card radius */
+}
+
+.work-card::after,
+.case-card::after {
+  content: "View case study";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+  color: #e9b94e; /* ✨ Gold accent */
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.1) 10%,
+    rgba(0, 0, 0, 0.85) 100%
+  );
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.35s ease;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Hover animation */
+.work-card:hover::after,
+.case-card:hover::after {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Add a soft glow border when hovered */
+.work-card:hover,
+.case-card:hover {
+  box-shadow: 0 0 24px rgba(233, 185, 78, 0.4);
+  transition: box-shadow 0.4s ease;
+}
+
+/* Image zoom for depth */
+.work-card img,
+.case-card img {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.4s ease;
+  z-index: 1;
+}
+
+.work-card:hover img,
+.case-card:hover img {
+  transform: scale(1.05);
+  filter: brightness(0.85);
+}
+
+
+/* ==== GOLD CTA OVERLAY (bulletproof) ==== */
+.work-card,
+.case-card,
+.project-card,
+.case,
+.work .card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 40px; /* match your radius */
+  isolation: isolate;  /* create a new stacking context */
+  cursor: pointer;
+  z-index: 0;
+}
+
+/* Ensure the image sits below overlays */
+.work-card img,
+.case-card img,
+.project-card img,
+.work .card img {
+  display: block;
+  width: 100%;
+  height: auto;
+  position: relative;
+  z-index: 1;
+  transition: transform .4s ease, filter .4s ease;
+}
+
+/* Dark gradient layer */
+.work-card::before,
+.case-card::before,
+.project-card::before,
+.work .card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 35%, rgba(0,0,0,.85) 100%);
+  opacity: 0;
+  transition: opacity .35s ease;
+  z-index: 2; /* below the text/button, above image */
+  pointer-events: none;
+}
+
+/* Gold ghost button text */
+.work-card::after,
+.case-card::after,
+.project-card::after,
+.work .card::after {
+  content: "View case study";
+  position: absolute;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%) translateY(8px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 1.5px solid #e9b94e;
+  color: #e9b94e;
+  background: rgba(0,0,0,.35);          /* subtle pill */
+  backdrop-filter: blur(2px);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: .4px;
+  text-transform: none;
+  text-shadow: 0 1px 2px rgba(0,0,0,.6);
+  box-shadow: 0 0 0 1px rgba(233,185,78,.2) inset, 0 6px 24px rgba(0,0,0,.25);
+  opacity: 0;
+  transition: opacity .35s ease, transform .35s ease;
+  z-index: 3; /* top-most */
+  pointer-events: none; /* never block clicks */
+}
+
+/* Hover/focus state — make sure both layers show */
+.work-card:hover::before,
+.case-card:hover::before,
+.project-card:hover::before,
+.work .card:hover::before,
+.work-card:focus-within::before,
+.case-card:focus-within::before,
+.project-card:focus-within::before,
+.work .card:focus-within::before {
+  opacity: 1;
+}
+
+.work-card:hover::after,
+.case-card:hover::after,
+.project-card:hover::after,
+.work .card:hover::after,
+.work-card:focus-within::after,
+.case-card:focus-within::after,
+.project-card:focus-within::after,
+.work .card:focus-within::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Optional polish */
+.work-card:hover img,
+.case-card:hover img,
+.project-card:hover img,
+.work .card:hover img {
+  transform: scale(1.05);
+  filter: brightness(.85);
+}
+
+
+/* === Card base (works for multiple class names) === */
+.work-card,
+.case-card,
+.project-card,
+#case-studies .card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 40px;   /* match your design */
+  isolation: isolate;    /* own stacking context */
+}
+
+/* Dark gradient backdrop on hover */
+.work-card.has-cta-gradient::before,
+.case-card.has-cta-gradient::before,
+.project-card.has-cta-gradient::before,
+#case-studies .card.has-cta-gradient::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 35%, rgba(0,0,0,0.85) 100%);
+  opacity: 0;
+  transition: opacity .35s ease;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* The gold CTA element (real node, not pseudo) */
+.card-cta {
+  position: absolute;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%) translateY(8px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 1.5px solid #e9b94e;
+  color: #e9b94e;
+  background: rgba(0,0,0,.35);
+  backdrop-filter: blur(2px);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: .4px;
+  text-shadow: 0 1px 2px rgba(0,0,0,.6);
+  box-shadow: 0 0 0 1px rgba(233,185,78,.2) inset, 0 6px 24px rgba(0,0,0,.25);
+  opacity: 0;
+  transition: opacity .35s ease, transform .35s ease;
+  z-index: 3;              /* above gradient & image */
+  pointer-events: none;     /* never block clicks */
+}
+
+/* Hover/focus-in reveals both layers */
+.work-card:hover.has-cta-gradient::before,
+.case-card:hover.has-cta-gradient::before,
+.project-card:hover.has-cta-gradient::before,
+#case-studies .card:hover.has-cta-gradient::before,
+.work-card:focus-within.has-cta-gradient::before,
+.case-card:focus-within.has-cta-gradient::before,
+.project-card:focus-within.has-cta-gradient::before,
+#case-studies .card:focus-within.has-cta-gradient::before {
+  opacity: 1;
+}
+
+.work-card:hover .card-cta,
+.case-card:hover .card-cta,
+.project-card:hover .card-cta,
+#case-studies .card:hover .card-cta,
+.work-card:focus-within .card-cta,
+.case-card:focus-within .card-cta,
+.project-card:focus-within .card-cta,
+#case-studies .card:focus-within .card-cta {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Subtle polish on image */
+.work-card img,
+.case-card img,
+.project-card img,
+#case-studies .card img {
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: transform .4s ease, filter .4s ease;
+  z-index: 1;
+}
+.work-card:hover img,
+.case-card:hover img,
+.project-card:hover img,
+#case-studies .card:hover img {
+  transform: scale(1.05);
+  filter: brightness(.85);
+}
+
+
+/* === Enhanced glassmorphic CTA button (blur + fill) === */
+.card-cta {
+  background: rgba(0,0,0,.6) !important;     /* darker, more opaque fill */
+  backdrop-filter: blur(8px) saturate(180%) !important;  /* stronger blur + saturation */
+  -webkit-backdrop-filter: blur(8px) saturate(180%) !important;
+  border: 1.5px solid rgba(233,185,78,.8) !important;   /* subtle border */
+  box-shadow: 
+    0 0 0 1px rgba(233,185,78,.2) inset,
+    0 8px 32px rgba(0,0,0,.4),
+    0 4px 16px rgba(233,185,78,.15) !important;  /* gold glow */
+}
+
+
+/* === Make "Other works" text italic === */
+.other-works-note {
+  font-style: italic !important;
+}
+
+
+/* === About page pills: black background, white text, non-clickable === */
+.about-pills .pill {
+  background-color: #000 !important;
+  color: #fff !important;
+  border: 1.5px solid #333 !important;
+  pointer-events: none !important;
+  cursor: default !important;
+}
+
+.about-pills .pill:hover {
+  background-color: #000 !important;
+  color: #fff !important;
+  transform: none !important;
+  border-color: #333 !important;
+}
+
