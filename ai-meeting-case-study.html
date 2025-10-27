@@ -1,0 +1,1936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AI Meeting Summarisation — Case Study</title>
+  
+  <!-- Favicon (PNG) — use relative path (works for file:// too) -->
+  <link rel="icon" href="images/FAVICON.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="images/FAVICON.png">
+  <link rel="shortcut icon" href="images/FAVICON.png">
+  
+  <link rel="stylesheet" href="css/buttons.css">
+  <link rel="stylesheet" href="css/nav-final.css">
+  <link rel="stylesheet" href="css/nav.v2.css">
+  <style>
+    /* ---------- design tokens ---------- */
+    :root{
+      /* colors */
+      --bg: #0f1012;
+      --surface: #181a1f;
+      --muted: #23262d;
+      --text: #e8eaed;
+      --text-dim: #b7bcc6;
+      --gold: #e2b669; /* solid gold for impact cards */
+      --gold-ink: #0b0b0b;
+
+      /* layout */
+      --container: 1120px;
+      --radius-sm: 4px;
+      --radius-md: 12px;
+
+      /* spacing (px) */
+      --space-title: 227px;         /* required spec */
+      --space-impact-gap: 33px;     /* required spec */
+      --s-0: 0;
+      --s-1: 8px;
+      --s-2: 12px;
+      --s-3: 16px;
+      --s-4: 20px;
+      --s-5: 24px;
+      --s-6: 32px;
+      --s-7: 40px;
+      --s-8: 56px;
+      --s-9: 72px;
+
+      /* type */
+      --fs-hero: clamp(28px, 5vw, 44px);
+      --fs-h2: clamp(20px, 3.2vw, 28px);
+      --fs-h3: clamp(16px, 2.6vw, 20px);
+      --fs-body: clamp(14px, 1.7vw, 16px);
+      --fs-sm: clamp(12px, 1.4vw, 14px);
+      --lh: 1.55;
+    }
+
+    @media (max-width: 720px){
+      :root{
+        --container: 92vw;
+      }
+    }
+
+    /* ---------- reset + base ---------- */
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      font: 400 var(--fs-body)/var(--lh) ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+      -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+    }
+
+    a{color:inherit}
+    img{max-width:100%; display:block; border-radius: var(--radius-md)}
+
+    /* ---------- layout helpers ---------- */
+    .wrap{max-width:var(--container); margin-inline:auto; padding-inline: clamp(12px, 3vw, 24px);}
+    .stack{display:flex; flex-direction:column; gap: var(--s-6);}
+    .tight{gap: var(--s-3);}
+    .grid{display:grid; gap: var(--s-4);}
+    .grid-3{grid-template-columns: repeat(3, minmax(0,1fr));}
+    .grid-4{grid-template-columns: repeat(4, minmax(0,1fr));}
+    @media (max-width: 1024px){ .grid-4{grid-template-columns: repeat(2,1fr);} }
+    @media (max-width: 720px){ .grid-3{grid-template-columns: 1fr;} .grid-4{grid-template-columns:1fr;} }
+
+    .surface{background:var(--surface); border:1px solid #1f2229; border-radius: var(--radius-md); padding: var(--s-5);}
+    .muted{background:var(--muted); border-radius: var(--radius-md); padding: var(--s-4);}
+    .eyebrow{font-size: var(--fs-sm); letter-spacing:.08em; text-transform:uppercase; color:var(--text-dim)}
+
+    /* ---------- top spacing rule ---------- */
+    .hero-spacer{height: var(--space-title);}
+
+    /* ---------- headings ---------- */
+    h1,h2,h3{margin:0; font-weight:600}
+    h1{font-size: var(--fs-hero)}
+    h2{font-size: var(--fs-h2)}
+    h3{font-size: var(--fs-h3); color:var(--text-dim)}
+
+    /* ---------- impact cards ---------- */
+    .impact-cards{ margin-top: var(--space-impact-gap); }
+    .impact-card{
+      background: var(--gold);
+      color: var(--gold-ink);
+      border-radius: var(--radius-sm); /* 4px as requested */
+      padding: clamp(16px, 2vw, 20px);
+      display:flex; flex-direction:column; gap:8px;
+      min-height: 110px;
+    }
+    .impact-stat{font-size: clamp(22px, 3.4vw, 30px); font-weight:700}
+    .impact-note{font-size: var(--fs-sm); opacity:.9}
+
+    /* Hide ONLY the old hero-style impact if it's still in the DOM */
+    section.impact:not(.impact--cards) { display: none; }
+
+    /* ---------- content sections ---------- */
+    section{padding-block: clamp(28px, 5vw, 48px);}
+    .section-title{margin-bottom: var(--s-3);}
+
+    /* ---------- parallax hero ---------- */
+    /* --- fix faint inner rectangle in Visual Design section --- */
+    .parallax-shell{
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--radius-md);
+      border: 1px solid #20232a !important;
+      background: linear-gradient(180deg, #121317 0%, #0f1012 100%) !important;
+      box-shadow: none !important;
+      padding: clamp(24px, 6vw, 72px);
+      min-height: 340px;
+      display:flex; align-items:center; justify-content:center;
+    }
+    
+    .parallax-shape{
+      position:absolute; 
+      inset: -12% -16% -36% -16% !important;
+      filter: blur(16px);
+      opacity: .45;
+      pointer-events:none;
+      background: linear-gradient(135deg, rgba(226,182,105,.15), rgba(226,182,105,.03));
+      transform: translateY(0px) rotate(-8deg);
+      border-radius: 24px;
+      will-change: transform;
+    }
+    
+    .parallax-foreground{
+      position:relative; 
+      z-index:2; 
+      max-width:780px;
+      background: transparent !important;
+    }
+
+    .parallax-foreground img{
+      display: block;
+      width:100%;
+      border-radius: 0;
+      background: transparent;
+      transform: translateZ(0);
+      image-rendering: auto;
+    }
+
+    .parallax-foreground::after{ display: none !important; }
+
+    @media (prefers-reduced-motion: reduce){
+      .parallax-shape{transform:none !important}
+    }
+
+    /* ---------- CTA placeholders ---------- */
+    .cta{height: 72px; border:1px dashed #2a2f39; border-radius: var(--radius-md); display:grid; place-items:center; color:var(--text-dim)}
+
+    /* ---- banner with eyebrow overlay ---- */
+    :root{
+      --hero-strip-height: 320px;
+      --hero-title-gap: 12px;   /* title sits 12px below banner bottom */
+      --eyebrow-up: 24px;       /* eyebrow sits 24px above title, on the banner */
+    }
+
+    /* banner container */
+    .hero-static{
+      position: relative;
+      display: block;
+      width: 100vw;
+      height: var(--hero-strip-height);
+      margin-left: calc(-50vw + 50%);        /* center to viewport */
+      background: url("./assets/public/background-static.png") center top / cover no-repeat;
+      overflow: hidden;
+    }
+
+    /* eyebrow on the banner */
+    .hero-static .eyebrow{
+      position: absolute;
+      left: clamp(20px, 6vw, 96px);      /* align with page content */
+      bottom: calc(var(--hero-title-gap) + var(--eyebrow-up));
+      font-size: 12px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.82);
+    }
+
+    /* soft fade at bottom of banner */
+    .hero-static::after{
+      content:"";
+      position:absolute; inset: auto 0 0 0; height: 40px;
+      background: linear-gradient(to bottom, rgba(15,16,18,0), rgba(15,16,18,1));
+      pointer-events:none;
+      filter: blur(0.5px);
+      opacity: .35;
+    }
+
+    /* content wrapper */
+    .wrap{
+      position: relative;
+      z-index: 0;
+    }
+
+    /* Impact section with gentle parallax */
+    .parallax-over-hero{
+      position: relative;
+      z-index: 3;
+      will-change: transform;
+      backface-visibility: hidden;
+    }
+    
+    @media (prefers-reduced-motion: reduce){
+      .parallax-over-hero{ transform: none !important; }
+    }
+
+    @media (max-width: 480px){
+      :root{ --hero-strip-height: 96px; }
+    }
+
+    /* flow grid */
+    .flow-grid{
+      display:grid;
+      gap: clamp(16px, 2.2vw, 28px);
+      grid-template-columns: repeat(4, minmax(0,1fr));
+    }
+    @media (max-width: 1100px){ .flow-grid{ grid-template-columns: repeat(2,1fr); } }
+    @media (max-width: 680px){ .flow-grid{ grid-template-columns: 1fr; } }
+
+    /* ---- flow card tuning ---- */
+    /* --- nudge flow caps ~10% upwards (less overlap) --- */
+    :root{
+      /* keep size; just lift the circle */
+      --flow-cap: 132px;         /* try 120–148px if needed */
+      --flow-cap-overlap: 26%;   /* was ~36%; smaller = higher */
+      --flow-body-min: 340px;    /* min height for the text box */
+      /* how much extra top padding inside the box */
+      --flow-body-pad-top: calc(var(--flow-cap) * 0.22 + 8px);  /* tweak 0.20–0.28 */
+    }
+
+    /* give the heading a hair more headroom after lifting */
+    .flow-card{
+      position: relative;
+      padding-top: calc(var(--flow-cap) * 0.78 + 22px); /* was 0.70 */
+    }
+
+    /* apply the new overlap (downwards) */
+    /* ---- subtle throb for the circular caps ---- */
+    /* we keep your translate values, and only scale around them */
+    .flow-icon{
+      position: absolute;
+      left: 50%;
+      top: 0;
+      --tx: -50%;
+      --ty: var(--flow-cap-overlap);
+      transform: translate(var(--tx), var(--ty)) scale(1);
+      transform-origin: 50% 50%;
+      will-change: transform, box-shadow, filter;
+      backface-visibility: hidden;
+      animation: flowThrob 5.6s ease-in-out infinite;
+      width: var(--flow-cap);
+      height: var(--flow-cap);
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      background: radial-gradient(120% 120% at 50% 40%, #15171b 0%, #0f1012 70%);
+      border: 1px solid rgba(226,182,105,.75);
+      box-shadow:
+        0 0 12px rgba(226,182,105,.105),
+        0 0 6px rgba(226,182,105,.075),
+        0 10px 24px rgba(0,0,0,.45),
+        inset 0 0 0 1px rgba(226,182,105,.25),
+        inset 0 0 6px rgba(226,182,105,.024);
+      z-index: 1;
+    }
+
+
+    /* stagger each card a bit so it feels organic */
+    .flow-card:nth-child(1) .flow-icon{ animation-duration: 5.2s; animation-delay: .0s; }
+    .flow-card:nth-child(2) .flow-icon{ animation-duration: 6.0s; animation-delay: .3s; }
+    .flow-card:nth-child(3) .flow-icon{ animation-duration: 5.8s; animation-delay: .6s; }
+    .flow-card:nth-child(4) .flow-icon{ animation-duration: 6.4s; animation-delay: .2s; }
+
+    @keyframes flowThrob{
+      0%   { 
+        transform: translate(var(--tx), var(--ty)) scale(1); 
+        filter: brightness(1);
+        box-shadow:
+          0 0 12px rgba(226,182,105,.105),
+          0 0 6px rgba(226,182,105,.075),
+          0 10px 24px rgba(0,0,0,.45),
+          inset 0 0 0 1px rgba(226,182,105,.25),
+          inset 0 0 6px rgba(226,182,105,.024);
+      }
+      50%  { 
+        transform: translate(var(--tx), var(--ty)) scale(1.04); 
+        filter: brightness(1.06);
+        box-shadow:
+          0 0 18px rgba(226,182,105,.15),
+          0 0 9px rgba(226,182,105,.105),
+          0 10px 30px rgba(0,0,0,.5),
+          inset 0 0 0 1px rgba(226,182,105,.35),
+          inset 0 0 7.5px rgba(226,182,105,.036);
+      }
+      100% { 
+        transform: translate(var(--tx), var(--ty)) scale(1); 
+        filter: brightness(1);
+        box-shadow:
+          0 0 12px rgba(226,182,105,.105),
+          0 0 6px rgba(226,182,105,.075),
+          0 10px 24px rgba(0,0,0,.45),
+          inset 0 0 0 1px rgba(226,182,105,.25),
+          inset 0 0 6px rgba(226,182,105,.024);
+      }
+    }
+
+
+    /* accessibility: disable motion if user prefers reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      .flow-icon, .flow-icon::after{
+        animation: none !important;
+        transform: translate(var(--tx), var(--ty)) scale(1) !important;
+      }
+    }
+
+    /* responsive tweaks */
+    @media (max-width: 1100px){
+      :root{ --flow-cap: 116px; --flow-cap-overlap: 24%; --flow-body-min: 320px; --flow-body-pad-top: calc(var(--flow-cap) * 0.20 + 6px); }
+      .flow-card{ padding-top: calc(var(--flow-cap) * 0.80 + 20px); }
+    }
+    @media (max-width: 680px){
+      :root{ --flow-cap: 100px; --flow-cap-overlap: 22%; --flow-body-min: 300px; --flow-body-pad-top: calc(var(--flow-cap) * 0.18 + 4px); }
+      .flow-card{ padding-top: calc(var(--flow-cap) * 0.82 + 18px); }
+    }
+
+    /* center the SVG, scale nicely */
+    .flow-icon img, .flow-icon svg{
+      width: 56%;
+      height: 56%;
+      object-fit: contain;
+      display: block;
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,.35));
+    }
+
+    /* === Add glow effect to flow icons === */
+    .flow-icon::after{
+      content: '';
+      position: absolute;
+      inset: -20px;
+      background: radial-gradient(circle at center, 
+        rgba(226, 182, 105, 0.075) 0%, 
+        rgba(226, 182, 105, 0.036) 30%, 
+        transparent 70%
+      );
+      border-radius: 999px;
+      z-index: -1;
+      opacity: 0.24;
+      animation: glowPulse 5.6s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    /* Pulse animation for the glow */
+    @keyframes glowPulse{
+      0%   { opacity: 0.18; transform: scale(1); }
+      50%  { opacity: 0.27; transform: scale(1.08); }
+      100% { opacity: 0.18; transform: scale(1); }
+    }
+
+    /* Stagger glow animations for each card */
+    .flow-card:nth-child(1) .flow-icon::after{ animation-duration: 5.2s; animation-delay: .0s; }
+    .flow-card:nth-child(2) .flow-icon::after{ animation-duration: 6.0s; animation-delay: .3s; }
+    .flow-card:nth-child(3) .flow-icon::after{ animation-duration: 5.8s; animation-delay: .6s; }
+    .flow-card:nth-child(4) .flow-icon::after{ animation-duration: 6.4s; animation-delay: .2s; }
+
+    /* accessibility: disable glow animation if user prefers reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      .flow-icon::after{
+        animation: none !important;
+        opacity: 0.21 !important;
+        transform: scale(1) !important;
+      }
+    }
+
+    /* text box starts lower */
+    .flow-body{
+      position: relative;
+      z-index: 0;
+      background: var(--surface);
+      border: 1px solid rgba(226,182,105,.45);
+      border-radius: 20px;
+      padding-top: calc(var(--flow-body-pad-top) + 20px); /* base 20px + extra */
+      padding-left: clamp(20px, 2.2vw, 26px);
+      padding-right: clamp(20px, 2.2vw, 26px);
+      padding-bottom: clamp(20px, 2.2vw, 26px);
+      min-height: var(--flow-body-min); /* keep overall height */
+    }
+
+    /* give headings a touch more breathing room from the icon edge */
+    .flow-body h3{ margin: 6px 0 10px; font-size: clamp(18px, 2.2vw, 22px); }
+    .flow-body p { margin: 0; color: var(--text-dim); line-height: 1.6; }
+
+    /* ===== FINAL SPACING ===== */
+
+    /* tighter section rhythm (~40% less than before) */
+    :root{
+      /* title → Impact → Problem (a bit tighter too) */
+      --cluster-tight: clamp(4px, 0.9vw, 10px);
+
+      /* unified cadence from Process → end */
+      --run-gap: clamp(28px, 3.6vw, 58px);
+    }
+
+    /* reset any previous generic section margins */
+    .wrap > section + section{ margin-top: 0 !important; }
+
+    /* top cluster */
+    .wrap > header + section#impactParallax{ margin-top: var(--cluster-tight) !important; }
+    .wrap > section#impactParallax + section#problem{ margin-top: var(--cluster-tight) !important; }
+
+    /* big break into Process */
+    .wrap > section#problem + section#process{ margin-top: calc(var(--run-gap)) !important; }
+
+    /* keep the robust rule that spaces everything after #process */
+    .wrap > #process ~ section{ margin-top: var(--run-gap) !important; }
+
+    /* Safety: don't let generic rules override these */
+    section { margin-top: 0; } /* baseline reset; our specific rules above take precedence */
+
+    /* hide any CTA placeholders and collapse their space */
+    .cta,
+    section.cta,
+    .stack .cta{ display: none !important; margin: 0 !important; padding: 0 !important; }
+
+    /* make sure footer still has a little breathing room */
+    footer{ margin-top: clamp(24px, 3vw, 40px); }
+
+    /* --- Zig-zag panels --- */
+    .zigzag{ }
+    .zigzag-row{
+      display:grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: clamp(20px, 3vw, 32px);
+      align-items: center;
+    }
+    .zigzag-row.right{ grid-template-columns: 1fr 1.1fr; }
+    @media (max-width: 960px){
+      .zigzag-row, .zigzag-row.right{ 
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+    }
+
+    /* Mobile: text block (with number) first, image second - TIGHTER SPACING */
+    @media (max-width: 900px){
+      .zigzag-row {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;           /* reduced from 14px */
+        margin-block: 16px;  /* reduced from 24px */
+      }
+      
+      .zigzag-text {
+        order: 1;
+      }
+      
+      .zigzag-media {
+        order: 2;
+        width: 100%;
+      }
+      
+      .zig-num-big {
+        font-size: clamp(30px, 4.5vw, 36px); /* slightly smaller */
+        margin-bottom: 4px;  /* reduced from 6px */
+      }
+      
+      .zigzag-text h3 {
+        margin: 0 0 6px;     /* reduced from 8px */
+        font-size: clamp(16px, 2.2vw, 18px); /* smaller text */
+      }
+      
+      .zigzag-text p {
+        margin: 0 0 6px;     /* reduced from 8px */
+        font-size: clamp(13px, 1.8vw, 15px); /* smaller text */
+      }
+      
+      .zigzag-text ul {
+        margin: 0;
+      }
+      
+      .zigzag-text li {
+        margin: 4px 0;       /* tighter list spacing */
+        font-size: clamp(13px, 1.8vw, 15px);
+      }
+      
+      /* Experience flow cards - responsive mobile spacing */
+      .flow-card {
+        padding: clamp(16px, 3vw, 24px); /* better mobile padding */
+        margin-bottom: 12px;             /* proper gap between cards */
+      }
+      
+      .flow-icon {
+        width: clamp(80px, 12vw, 100px); /* better mobile icon size */
+        height: clamp(80px, 12vw, 100px);
+        margin-bottom: 12px;             /* proper space below icon */
+      }
+      
+      .flow-body {
+        padding-top: clamp(16px, 2vw, 20px); /* better mobile padding */
+        min-height: 280px;              /* better mobile card height */
+      }
+      
+      /* Ensure proper mobile grid behavior */
+      .flow-grid {
+        gap: clamp(16px, 3vw, 24px);    /* responsive gap */
+        grid-template-columns: 1fr;     /* single column on mobile */
+      }
+      
+      .flow-body h3 {
+        margin: 0 0 6px;                /* tighter heading spacing */
+        font-size: clamp(16px, 2.2vw, 18px);
+      }
+      
+      .flow-body p {
+        margin: 0;
+        font-size: clamp(13px, 1.8vw, 15px);
+        line-height: 1.4;               /* tighter line height */
+      }
+      
+      /* SECTION SPACING - Mobile only */
+      /* Visual laptop → 01 section */
+      #visual + #journey { 
+        margin-top: 8px !important;  /* very tight */
+      }
+      
+      /* Between journey sections */
+      #journey section + section { 
+        margin-top: 12px !important; /* tighter */
+      }
+      
+      /* Solutions section spacing */
+      #solution-highlights {
+        margin-top: 20px !important; /* reduced */
+        padding: clamp(16px, 3vw, 24px); /* less padding inside */
+      }
+      
+      #key-learnings {
+        margin-top: 16px !important; /* tighter */
+        padding: clamp(16px, 3vw, 24px);
+      }
+      
+      /* Disclaimer spacing */
+      #visual .disclaimer {
+        margin-top: 8px !important;  /* tighter after laptop */
+      }
+
+      /* 1) Kill sticky titles on case-study pages - FIX the AI meeting title */
+      header[id="top"] {
+        position: static !important;
+      }
+      #top h1, header h1 {
+        position: static !important;
+        top: auto !important;
+        transform: none !important;
+      }
+      :where(.sticky, .is-sticky, [class*="sticky"], [style*="position: sticky"]) {
+        position: static !important;
+        top: auto !important;
+      }
+
+      /* 2) Fix title overlap - ensure header has proper spacing */
+      #top h1 {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+      }
+
+      /* 3) Flow cards: COMPLETE REDESIGN for mobile to match reference */
+      /* Remove all desktop overlap behavior */
+      .flow-card {
+        padding: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        background: var(--surface) !important;
+        border: 1px solid rgba(226,182,105,.45) !important;
+        border-radius: 20px !important;
+        padding: 24px !important;
+        gap: 0 !important;
+      }
+
+      .flow-icon {
+        position: static !important;
+        left: auto !important;
+        top: auto !important;
+        transform: none !important;
+        margin: 0 0 20px !important;
+        width: 90px !important;
+        height: 90px !important;
+        animation: none !important;
+      }
+
+      .flow-icon::after {
+        display: none !important;
+      }
+
+      /* Title centered below icon */
+      .flow-body {
+        padding: 0 !important;
+        min-height: auto !important;
+        border: none !important;
+        background: transparent !important;
+        text-align: center !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        width: 100% !important;
+      }
+
+      .flow-body h3 {
+        margin: 0 0 12px !important;
+        text-align: center !important;
+      }
+
+      .flow-body p {
+        margin: 0 !important;
+        text-align: center !important;
+      }
+    }
+
+    .zigzag-card{
+      background: var(--surface);
+      border: 1px solid #3a3428;
+      border-radius: 12px;
+      padding: clamp(18px, 2.2vw, 22px);
+      position: relative;
+    }
+    .zigzag-gold{
+      background: linear-gradient(180deg, rgba(226,182,105,.18), rgba(226,182,105,.10));
+      border: 1px solid rgba(226,182,105,.55);
+    }
+    .zigzag-num{
+      position: absolute; left: clamp(14px,2vw,16px); top: clamp(12px,2vw,14px);
+      font-weight: 700; letter-spacing:.02em;
+      color: var(--gold);
+      font-size: clamp(18px, 3vw, 22px);
+    }
+    .zigzag-card h3{ margin: 12px 0 8px; }
+    .zigzag-card p{ margin: 0 0 8px; color: var(--text-dim); }
+    .zigzag-card ul{ margin: 0; padding-left: 18px; color: var(--text-dim); }
+    .zigzag-card li{ margin: 6px 0; }
+
+    .zigzag-media{
+      margin: 0;
+      background: #0f1012;
+      border-radius: 8px;
+      border: 1px solid #2a2f39;
+      overflow: hidden;
+      box-shadow: 0 10px 24px rgba(0,0,0,.35);
+    }
+    .zigzag-media img{
+      display:block; width:100%; height:auto; object-fit: cover;
+    }
+
+    /* bullets inside surface cards */
+    .bullets{ padding-left: 20px; }
+    .bullets li{ margin: 8px 0; }
+
+    /* --- Floating FABs --- */
+    .fab{
+      position: fixed;
+      right: 18px;
+      width: 44px; height: 44px;
+      border-radius: 999px;
+      display: grid; place-items: center;
+      background: #20242b;
+      color: var(--text);
+      border: 1px solid #2a2f39;
+      box-shadow: 0 8px 24px rgba(0,0,0,.35);
+      cursor: pointer;
+      z-index: 50;
+      transition: transform .2s ease, opacity .2s ease, background .2s ease;
+    }
+    .fab:hover{ transform: translateY(-2px); background:#242a33; }
+    .fab-top{ bottom: 18px; }
+    .fab-back{ bottom: 72px; }
+    @media (max-width: 640px){ .fab{ right: 12px; } }
+
+    /* smooth scroll */
+    html{ scroll-behavior: smooth; }
+
+    /* short intro paragraph under section titles */
+    .section-intro{
+      margin: 10px 0 18px;              /* tight top cluster feel */
+      max-width: 72ch;                  /* readable line length */
+      color: var(--text-dim);
+      font-size: clamp(14px, 1.05vw, 16px);
+      line-height: 1.6;
+    }
+
+    /* tiny legal/disclaimer under the laptop hero */
+    .disclaimer{
+      margin-top: 10px;
+      color: var(--text-dim);
+      font-size: clamp(12px, .95vw, 13px);
+      line-height: 1.55;
+      max-width: 78ch;
+    }
+
+    /* make section blurbs fill the full section width */
+    #blueprint .section-intro,
+    #ideation .section-intro,
+    #aimodel .section-intro,
+    #ux .section-intro{
+      max-width: none !important;   /* remove 72ch cap */
+      width: 100%;
+      margin-left: 0;
+      margin-right: 0;
+    }
+
+    /* optional: keep good readability on very small screens (no change above 680px) */
+    @media (max-width: 680px){
+      #blueprint .section-intro,
+      #ideation .section-intro,
+      #aimodel .section-intro,
+      #ux .section-intro{
+        max-width: none;            /* still full width */
+        font-size: clamp(14px, 1.05vw, 16px);
+        line-height: 1.6;
+      }
+    }
+
+    /* NDA disclaimer style: italic, gold, padded */
+    #visual .disclaimer{
+      font-style: italic;
+      color: var(--gold, #E2B669);
+      padding: 12px;
+      max-width: none;   /* keep full-width fill */
+      width: 100%;
+      /* optional: subtle left accent */
+      border-left: 2px solid rgba(226,182,105,.35);
+      padding-left: 14px;           /* keeps 12px inside + 2px border */
+    }
+
+    /* ===== Zig-zag clean variant (no gold box) ===== */
+    :root{
+      --zig-col-l: 1.05fr;     /* text column */
+      --zig-col-r: 1fr;        /* media column */
+      --zig-pad-x: clamp(10px, 1.6vw, 18px);
+      --zig-pad-y: clamp(8px, 1.2vw, 14px);
+    }
+
+    .zigzag-row{
+      display: grid;
+      grid-template-columns: var(--zig-col-l) var(--zig-col-r);
+      gap: clamp(18px, 2.4vw, 28px);
+      align-items: center;               /* vertical alignment */
+    }
+
+    .zigzag-row.right{
+      grid-template-columns: var(--zig-col-r) var(--zig-col-l);
+    }
+
+    /* text block (replaces the gold card) */
+    .zigzag-text{
+      padding: var(--zig-pad-y) var(--zig-pad-x);
+    }
+
+    .zigzag-num{
+      display: inline-block;
+      padding: 2px 10px;                 /* padding for "01" label */
+      margin: 0 0 8px 0;
+      border-radius: 8px;
+      background: rgba(226,182,105,.12);
+      color: var(--gold);
+      font-weight: 700;
+      letter-spacing: .02em;
+      font-size: clamp(16px, 2.2vw, 20px);
+    }
+
+    .zigzag-text h3{
+      margin: 6px 0 10px;
+    }
+
+    .zigzag-text p{
+      margin: 0 0 10px;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+
+    .zigzag-text ul{
+      margin: 0;
+      padding-left: 18px;                /* bullet indent */
+    }
+
+    .zigzag-text li{
+      margin: 6px 0;                     /* consistent bullet spacing */
+    }
+
+    /* media panel keeps the nice frame */
+    .zigzag-media{
+      margin: 0;
+      background: #0f1012;
+      border-radius: 12px;
+      border: 1px solid #2a2f39;
+      overflow: hidden;
+      box-shadow: 0 10px 24px rgba(0,0,0,.35);
+    }
+
+    .zigzag-media img{
+      display: block; width: 100%; height: auto; object-fit: cover;
+    }
+
+    /* responsive stack */
+    @media (max-width: 960px){
+      .zigzag-row, .zigzag-row.right{ grid-template-columns: 1fr; }
+      .zigzag-text{ padding: calc(var(--zig-pad-y) + 2px) var(--zig-pad-x); }
+    }
+
+    /* tighten interior space of all zig-zag items uniformly */
+    #zigzag-01, #zigzag-02, #zigzag-03, #zigzag-04{
+      padding-inline: clamp(6px, 1.2vw, 12px);
+    }
+
+    /* tighter rhythm: title → line → impact */
+    
+    /* title block sits right after the banner */
+    #top h1{
+      margin: var(--hero-title-gap) 0 0 0;   /* exactly 12px below the banner */
+      transform: none;                       /* cancel any earlier nudges */
+    }
+
+    /* the line sits 12px below the title */
+    .title-rule{
+      margin-top: 12px;
+      margin-bottom: 0;                      /* no extra air before Impact */
+      height: 1px;
+      background: linear-gradient(90deg, rgba(255,255,255,.22), rgba(255,255,255,.08));
+      border-radius: 1px;
+    }
+
+    /* reduce spacing from the line to Impact by another ~40% */
+    .wrap > header + section#impactParallax{
+      margin-top: clamp(2px, 0.3vw, 6px) !important;
+    }
+
+    /* --- CLOSE pill (top-right) --- */
+    .btn-close{
+      position: fixed;
+      top: 16px; right: 16px;
+      padding: 8px 14px 8px 12px;
+      font-size: 14px;
+      line-height: 1;
+      border-radius: 999px;
+      color: #0f1012;
+      background: var(--gold, #E2B669);
+      border: 1px solid rgba(0,0,0,.55);
+      box-shadow: 0 8px 24px rgba(0,0,0,.35);
+      cursor: pointer;
+      z-index: 60;
+      display: inline-flex; gap: 8px; align-items: center;
+      transition: transform .15s ease, opacity .2s ease, filter .2s ease;
+    }
+    .btn-close:hover{ transform: translateY(-1px); filter: brightness(0.98); }
+
+    /* --- TOP button (prominent ring) --- */
+    .fab-circle{
+      position: fixed;
+      right: 18px; bottom: 18px;
+      width: 56px; height: 56px;
+      border-radius: 999px;
+      display: grid; place-items: center;
+      color: #fff;
+      background: rgba(255,255,255,0.02);
+      border: 2px solid rgba(255,255,255,0.92);
+      box-shadow: 0 10px 26px rgba(0,0,0,.45), inset 0 0 24px rgba(255,255,255,.06);
+      backdrop-filter: blur(2px);
+      cursor: pointer;
+      z-index: 55;
+      transition: transform .15s ease, opacity .2s ease, background .2s ease, border-color .2s ease;
+    }
+    .fab-circle:hover{ transform: translateY(-2px); background: rgba(255,255,255,0.06); }
+
+    /* hide any leftover floating back button */
+    .fab-back{ display:none !important; }
+
+
+    /* ===================== Zig-zag CONNECTORS ===================== */
+    .zig-bridge{
+      height: clamp(80px, 12vw, 160px);
+      margin: clamp(14px, 2.2vw, 24px) 0;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: contain;
+      filter: drop-shadow(0 14px 28px rgba(0,0,0,.35));
+      opacity: .9;
+    }
+    .zig-bridge.ltr{
+      /* gold diagonal (left→right) */
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 300' preserveAspectRatio='xMidYMid slice'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='%23e2b669' stop-opacity='0.55'/><stop offset='100%' stop-color='%23e2b669' stop-opacity='0.15'/></linearGradient></defs><path d='M0,260 L420,40 L1200,40 L780,260 Z' fill='url(%23g)'/></svg>");
+    }
+    .zig-bridge.rtl{
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 300' preserveAspectRatio='xMidYMid slice'><defs><linearGradient id='g' x1='1' y1='0' x2='0' y2='1'><stop offset='0%' stop-color='%23e2b669' stop-opacity='0.55'/><stop offset='100%' stop-color='%23e2b669' stop-opacity='0.15'/></linearGradient></defs><path d='M0,40 L480,260 L1200,260 L720,40 Z' fill='url(%23g)'/></svg>");
+    }
+
+    /* mobile: keep it lighter/shorter so it doesn't overwhelm */
+    @media (max-width: 720px){
+      .zig-bridge{ height: 80px; opacity: .75; filter: drop-shadow(0 8px 18px rgba(0,0,0,.3)); }
+    }
+
+    /* ===================== Hero STEP NUMBER ===================== */
+    .zig-num-big{
+      position: relative;
+      display: inline-block;
+      font-weight: 800;
+      font-size: clamp(40px, 6vw, 72px);
+      letter-spacing: .02em;
+      line-height: 1;
+      background: linear-gradient(180deg, #cbc2ff 0%, #bbaeff 28%, #a995ff 52%, #e2b669 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      filter: drop-shadow(0 1px 0 rgba(0,0,0,.35));
+      margin: 0 0 12px;
+    }
+
+
+    /* spacing harmony with the rest of the text block */
+    .zigzag-text h3{ margin-top: 12px; }
+
+    /* tighten cadence another ~30% from current */
+    :root{
+      --run-gap: clamp(20px, 2.6vw, 40px);    /* ↓ from previous values */
+    }
+
+    /* bump solution highlights & learnings back up if they got too tight */
+    #solution-highlights{ margin-top: calc(var(--run-gap) * 1.25) !important; }
+    #key-learnings{      margin-top: calc(var(--run-gap) * 1.25) !important; }
+
+    /* tighter rows */
+    .zigzag-row{
+      gap: clamp(14px, 1.8vw, 22px);          /* ↓ tighter */
+      align-items: center;
+    }
+    .zigzag-text{ padding: 6px 8px; }         /* lighter interior */
+    .zigzag-text h3{ margin: 8px 0 8px; }
+    .zigzag-text p{  margin: 0 0 8px; }
+    .zigzag-text li{ margin: 4px 0; }
+
+    /* ===== Zig-zag vertical rhythm (tighter) ===== */
+    :root{
+      --zig-gap-y: clamp(28px, 3.2vw, 44px);     /* row ↔ row */
+      --zig-link-h: clamp(36px, 5.2vw, 72px);    /* connector height */
+    }
+
+    /* row container spacing */
+    #zigzag-01, #zigzag-02, #zigzag-03, #zigzag-04{
+      margin-top: var(--zig-gap-y) !important;
+    }
+
+    /* make the rows themselves a bit denser */
+    .zigzag-row{ gap: clamp(12px, 1.6vw, 20px); }
+    .zigzag-text{ padding: 4px 6px; }
+    .zigzag-text h3{ margin: 6px 0 6px; }
+    .zigzag-text p{  margin: 0 0 6px; }
+    .zigzag-text li{ margin: 3px 0; }
+
+    /* ===== Gradient link with tapered ends ===== */
+    .connect-parallax{
+      position: relative;
+      height: var(--zig-link-h);
+      margin: calc(var(--zig-gap-y) * 0.25) 0;
+      pointer-events: none;
+      will-change: transform;
+    }
+
+    /* the gradient "ribbon" */
+    .connect-parallax::before{
+      content:"";
+      position:absolute; inset:0;
+      border-radius: 999px;
+      background:
+        radial-gradient(60% 220% at 10% 50%, rgba(226,182,105,.00) 0%, rgba(226,182,105,.18) 28%, rgba(226,182,105,.00) 68%) ,
+        linear-gradient(90deg, rgba(226,182,105,.08), rgba(226,182,105,.34), rgba(226,182,105,.08));
+      filter: drop-shadow(0 12px 22px rgba(0,0,0,.35));
+      opacity: .85;
+    }
+
+    /* light diagonal hint so it flows L↔R depending on layout */
+    .zigzag-row + .connect-parallax::before{
+      transform: rotate(-2.5deg);
+    }
+    .connect-parallax + .zigzag-row .zigzag-text{
+      /* small visual nudge so the eye follows the ribbon */
+      transform: translateY(-2px);
+    }
+
+    /* smaller on mobile so it doesn't dominate */
+    @media (max-width: 820px){
+      .connect-parallax{ height: clamp(24px, 6vw, 40px); }
+      .connect-parallax::before{ opacity: .75; }
+    }
+
+    /* nuke any previous bridges/ribbons */
+    .connect-parallax,
+    .zig-bridge{ display:none !important; }
+
+    /* make the journey stack very tight (~20% of normal spacing) */
+    #visual + #zigzag-01{ margin-top: calc(var(--run-gap) * 0.2) !important; }
+    #zigzag-01 + #zigzag-02,
+    #zigzag-02 + #zigzag-03,
+    #zigzag-03 + #zigzag-04{ margin-top: calc(var(--run-gap) * 0.2) !important; }
+
+    /* also tighten row internals a bit */
+    #zigzag-01 .zigzag-row,
+    #zigzag-02 .zigzag-row,
+    #zigzag-03 .zigzag-row,
+    #zigzag-04 .zigzag-row{
+      gap: clamp(10px, 1.4vw, 18px);
+    }
+
+    /* container so we can scope the effect */
+    #journey{ position: relative; z-index: 0; }
+
+
+    /* === Single left-side glow + fades === */
+    :root{ --bg: #0f1012; } /* your page background */
+
+    /* scope */
+    #journey{ position: relative; z-index: 0; }
+
+    /* Make sure the wrapper establishes a layering context */
+    #journey{ position: relative; z-index: 0; }
+
+    /* Content sits above glow */
+    #journey > *{ position: relative; z-index: 1; }
+
+
+
+    /* tighten spacing from laptop visual through 04 by ~80% */
+    #visual + #journey{ margin-top: calc(var(--run-gap) * 0.2) !important; }
+    #journey section + section{ margin-top: calc(var(--run-gap) * 0.2) !important; }
+
+    /* a bit tighter inside the zigzag rows too (optional) */
+    #journey .zigzag-row{ gap: clamp(10px, 1.4vw, 18px); }
+
+    /* --- remove any current bridge/glow visuals globally --- */
+    /* === Nuke all glow/shadows/filters (global) === */
+    /* EXCEPTION: .flow-icon glows are preserved */
+    .section-glow,
+    .bg-glow,
+    .glow,
+    .glow-left,
+    .glow-right,
+    .connect-parallax,
+    .zig-bridge,
+    .glow-band,
+    .side-glow,
+    .journey-fade,
+    .journey-fade-top,
+    .journey-fade-bottom,
+    #page-glow {
+      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+    }
+
+    /* If glow was added with pseudo elements */
+    /* EXCEPTION: .flow-icon::after is preserved for glow effect */
+    .section-glow::before,
+    .section-glow::after,
+    .glow::before,
+    .glow::after,
+    .side-glow::before,
+    .side-glow::after,
+    #journey::before,
+    #journey::after {
+      content: none !important;
+      display: none !important;
+    }
+
+    /* Explicitly allow flow-icon glows to work */
+    .flow-icon::after {
+      display: block !important;
+      visibility: visible !important;
+      opacity: 0.24 !important; /* Will be animated */
+    }
+
+
+    /* also neutralize their pseudo-elements just in case */
+    .connect-parallax::before,
+    .zig-bridge::before,
+    .glow-band::before,
+    .side-glow::before,
+    .journey-fade::before{
+      content: none !important;
+    }
+
+    /* --- tighten the 01–04 stack by ~30% --- */
+    #zigzag-01, #zigzag-02, #zigzag-03, #zigzag-04{
+      /* take whatever your global gap is and multiply by 0.7 */
+      margin-top: calc(var(--run-gap, 48px) * 0.7) !important;
+    }
+
+    /* Reduce the gaps BETWEEN the zigzag sections as well */
+    #zigzag-01 + #zigzag-02,
+    #zigzag-02 + #zigzag-03,
+    #zigzag-03 + #zigzag-04{
+      margin-top: calc(var(--run-gap, 48px) * 0.7) !important;
+    }
+
+    /* Make each row a touch denser so the whole block feels tighter */
+    #zigzag-01 .zigzag-row,
+    #zigzag-02 .zigzag-row,
+    #zigzag-03 .zigzag-row,
+    #zigzag-04 .zigzag-row{
+      gap: clamp(12px, 1.6vw, 20px);
+    }
+
+    /* Optional: slightly reduce inner text stack spacing */
+    #zigzag-01 .zigzag-text h3,
+    #zigzag-02 .zigzag-text h3,
+    #zigzag-03 .zigzag-text h3,
+    #zigzag-04 .zigzag-text h3{ margin: 6px 0 6px; }
+
+    #zigzag-01 .zigzag-text p,
+    #zigzag-02 .zigzag-text p,
+    #zigzag-03 .zigzag-text p,
+    #zigzag-04 .zigzag-text p{ margin: 0 0 6px; }
+
+    #zigzag-01 .zigzag-text li,
+    #zigzag-02 .zigzag-text li,
+    #zigzag-03 .zigzag-text li,
+    #zigzag-04 .zigzag-text li{ margin: 3px 0; }
+
+    /* Process section styling */
+    .process-grid{
+      display: grid;
+      grid-template-columns: repeat(4, minmax(220px,1fr));
+      gap: clamp(16px, 2.5vw, 28px);
+    }
+    .process-card{
+      border: 2px solid rgba(226,182,105,.6);
+      border-radius: 16px;
+      background: rgba(226,182,105,.08);
+      padding: clamp(16px, 2.2vw, 24px);
+    }
+    .process-title{ 
+      margin: 0 0 8px; 
+      font-weight: 700; 
+      color: var(--gold, #e2b669);
+    }
+    .process-card p{ 
+      margin: 0;
+      color: var(--text-dim);
+    }
+    @media (max-width: 900px){
+      .process-grid{ grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 560px){
+      .process-grid{ grid-template-columns: 1fr; }
+    }
+
+    /* tighten the block spacing around the whole 01–04 area */
+    #visual + #journey{
+      margin-top: clamp(12px, 1.5vw, 20px) !important; /* much tighter */
+    }
+
+    /* tighten each card */
+    #journey .journey-item{
+      margin-block: clamp(8px, 1.2vw, 14px);          /* was ~24–40px */
+      padding-block: clamp(6px, 1vw, 10px);
+    }
+
+    /* if your journey items are in rows/columns, shrink the gap too */
+    #journey .journey-grid{
+      row-gap: clamp(8px, 1.2vw, 14px);
+      column-gap: clamp(12px, 1.5vw, 18px);
+    }
+
+    /* images sit closer to their text */
+    #journey .journey-img{
+      margin-top: clamp(6px, 1vw, 10px);
+    }
+
+    /* tighten the block spacing around the whole 01–04 area */
+    #visual + #journey{
+      margin-top: clamp(12px, 1.5vw, 20px) !important; /* much tighter */
+    }
+
+    /* tighten each card */
+    #journey .journey-item{
+      margin-block: clamp(8px, 1.2vw, 14px);          /* was ~24–40px */
+      padding-block: clamp(6px, 1vw, 10px);
+    }
+
+    /* if your journey items are in rows/columns, shrink the gap too */
+    #journey .journey-grid{
+      row-gap: clamp(8px, 1.2vw, 14px);
+      column-gap: clamp(12px, 1.5vw, 18px);
+    }
+
+    /* remove the back button entirely */
+    #backBtn,
+    .btn-back,
+    .fab-back{ display: none !important; }
+
+    /* create a layer above the background but behind content */
+    #visual, #journey { position: relative; z-index: 0; }
+    #visual > *, #journey > * { position: relative; z-index: 2; }
+
+
+    /* if any ancestor had overflow hidden, this prevents clipping fears */
+    html, body { overflow-x: clip; }
+
+    /* TOTAL area spacing: laptop → 01–04 */
+    #visual + #journey { margin-top: clamp(6px, 1vw, 12px) !important; }
+
+    /* per-item density */
+    #journey .journey-item {
+      margin-block: clamp(6px, 0.9vw, 12px) !important;
+      padding-block: clamp(4px, 0.6vw, 8px) !important;
+    }
+
+    /* grid gaps (if you use a grid wrapper) */
+    #journey .journey-grid {
+      row-gap: clamp(6px, 0.9vw, 12px) !important;
+      column-gap: clamp(8px, 1vw, 14px) !important;
+    }
+
+    /* image spacing */
+    #journey .journey-img { margin-top: clamp(4px, 0.6vw, 8px) !important; }
+
+    /* Process grid styling update */
+    #process .process-grid{
+      display:grid;
+      grid-template-columns: repeat(4,minmax(220px,1fr));
+      gap: clamp(16px,2.5vw,28px);
+    }
+    #process .process-card{
+      border:2px solid rgba(226,182,105,.6);
+      border-radius:16px;
+      background:rgba(226,182,105,.08);
+      padding: clamp(16px,2.2vw,24px);
+    }
+    #process .process-title{
+      margin: 14px 0 8px;
+      font-weight: 700;
+      color: var(--gold, #e2b669);
+    }
+    #process .process-icon{ width:40px; height:40px; opacity:.92; display:block; margin-bottom:12px; }
+    #process .process-bullets{ margin:0; padding-left:1.25rem; }
+    #process .process-bullets li{ margin: 6px 0; }
+    @media (max-width: 900px){ #process .process-grid{ grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 560px){ #process .process-grid{ grid-template-columns: 1fr; } }
+
+    /* 01–04 spacing: nuclear fix (it will win) */
+    #journey{ --step-gap: clamp(6px, .9vw, 12px); --step-pad: clamp(6px, .8vw, 10px); }
+
+    /* Try the most common item class first */
+    #journey .journey-item{ margin-block: var(--step-gap) !important; padding-block: var(--step-pad) !important; }
+
+    /* Fallbacks: hit common tags if classes differ */
+    #journey article, 
+    #journey .card, 
+    #journey .step, 
+    #journey .row { margin-block: var(--step-gap) !important; padding-block: var(--step-pad) !important; }
+
+    /* Kill default vertical space inside */
+    #journey h3, #journey h4, #journey p, #journey ul, #journey ol { margin-block: .4em !important; }
+    #journey .journey-img{ margin-top: .5em !important; }
+
+    /* Tighten the gap between laptop visual and first step */
+    #visual + #journey { margin-top: clamp(8px, 1vw, 12px) !important; }
+    
+    /* Override close button positioning for AI meeting page */
+    .close-button {
+      position: fixed !important;
+      top: 20px !important;
+      right: 20px !important;
+      background: transparent !important;
+      border: 1px solid rgba(255, 255, 255, 0.3) !important;
+      border-radius: 50% !important;
+      width: 50px !important;
+      height: 50px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      z-index: 9999 !important;
+    }
+    
+    /* Remove default close button text/icons - only show SVG */
+    .close-button::before,
+    .close-button::after {
+      display: none !important;
+    }
+    
+    .close-button span {
+      display: none !important;
+    }
+    
+    /* Ensure only the img (SVG) is visible */
+    .close-button img {
+      display: block !important;
+      width: 20px !important;
+      height: 20px !important;
+    }
+    
+    /* Override back-to-top button positioning */
+    .back-to-top {
+      position: fixed !important;
+      bottom: 20px !important;
+      right: 20px !important;
+      background: rgba(0, 0, 0, 0.7) !important;
+      border: 2px solid rgba(255, 255, 255, 0.3) !important;
+      border-radius: 50% !important;
+      width: 50px !important;
+      height: 50px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      z-index: 1000 !important;
+    }
+    
+    /* Remove default CSS icons - only show SVG */
+    .back-to-top::before,
+    .back-to-top::after {
+      display: none !important;
+    }
+    
+    .back-to-top svg {
+      display: none !important;
+    }
+    
+    /* Ensure only the img (SVG) is visible */
+    .back-to-top img {
+      display: block !important;
+      width: 20px !important;
+      height: 20px !important;
+    }
+
+    /* Hide old buttons */
+    .close-button,
+    .back-to-top {
+      display: none !important;
+    }
+
+    /* Close Button (top-right corner) - khaki/tan color */
+    .close-btn {
+      position: fixed;
+      top: 30px;
+      right: 30px;
+      z-index: 9999;
+      display: inline-flex; 
+      align-items: center; 
+      gap: 8px;
+      padding: 10px 14px;
+      font-weight: 700; 
+      font-size: 14px;
+      border-radius: 999px;
+      border: 1px solid #000000;
+      background: #d2b48c;
+      color: #000000;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    .close-btn:hover {
+      background: #c4a484;
+      transform: scale(1.05);
+    }
+
+    /* Scroll-to-Top Button - just the icon, no container */
+    .scroll-btn {
+      position: fixed;
+      bottom: 40px;
+      right: 40px;
+      width: 56px;
+      height: 56px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: none; /* hidden until scroll */
+      z-index: 9999;
+      transition: all 0.3s ease;
+      opacity: 0.8;
+    }
+    .scroll-btn:hover {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+
+    /* Icon fit - 56px with aspect ratio maintained */
+    .scroll-btn img {
+      width: 56px;
+      height: auto;
+    }
+  </style>
+</head>
+<body class="theme-dark ai-case theme-ai cs-page case-study">
+
+<!-- Fixed Top-Right Close Button -->
+<button class="close-btn" onclick="window.location.href='index.html#case-studies'" aria-label="Close case study" tabindex="0">close <span>✕</span></button>
+
+<!-- Header -->
+<header class="navv2-header" role="banner">
+  <div class="navv2-wrap">
+    <a class="navv2-brand" href="index.html">the.shivangini.singh</a>
+
+    <!-- Desktop links -->
+    <nav class="navv2-desktop" aria-label="Primary">
+      <a href="work.html" data-key="work">work</a>
+      <a href="about.html" data-key="about">about me</a>
+      <a href="blog.html" data-key="blog">blog</a>
+      <a href="contact.html" data-key="contact">contact me</a>
+    </nav>
+
+    <!-- Mobile pill -->
+    <button class="navv2-toggle" aria-expanded="false" aria-controls="navv2-panel">
+      <span class="navv2-toggle-label">menu</span>
+      <span class="navv2-toggle-icon" aria-hidden="true"></span>
+    </button>
+  </div>
+
+  <!-- Mobile panel -->
+  <div id="navv2-panel" class="navv2-panel" hidden>
+    <nav class="navv2-panel-inner" aria-label="Mobile menu">
+      <a class="navv2-link" href="about.html">about me</a>
+      <a class="navv2-link" href="work.html">work</a>
+      <a class="navv2-link" href="blog.html">blog</a>
+      <a class="navv2-link" href="contact.html">contact me</a>
+    </nav>
+  </div>
+</header>
+
+<!-- Scroll-to-Top Button -->
+<button id="scrollTopBtn" class="scroll-btn" aria-label="Scroll to top" tabindex="0">
+  <img src="images/buttons/scroll.svg" alt="Scroll to top" style="width: 56px; height: auto;" />
+</button>
+
+  <!-- banner / hero art -->
+  <div class="hero-static" aria-hidden="false">
+  </div>
+
+  <div class="wrap">
+    <!-- header content immediately after the banner -->
+    
+    <header id="top">
+      <h1>AI meeting summarisation</h1>
+      <div class="title-rule" aria-hidden="true"></div>
+    </header>
+
+    <!-- 2) Impact -->
+    <section id="impact-cards" class="impact impact--cards">
+      <h2 class="section-title">Impact</h2>
+      <div class="grid grid-3 impact-cards">
+        <article class="impact-card">
+          <div class="impact-stat">~45%</div>
+          <div class="impact-note">reduction<br>in usability issues<br><span style="font-size: 0.85em;">(validated via testing).</span></div>
+        </article>
+        <article class="impact-card">
+          <div class="impact-stat">~83%</div>
+          <div class="impact-note">satisfaction rating on AI<br>summaries<br><span style="font-size: 0.85em;">(quality & clarity)</span></div>
+        </article>
+        <article class="impact-card">
+          <div class="impact-stat">Adoption at scale</div>
+          <div class="impact-note" style="font-size: 0.9em; line-height: 1.4;">
+            • Cross-functional alignment: Partnered with product, legal & tech teams for smooth rollout.<br>
+            • Productivity boost: Reported time savings, smoother onboarding, and faster follow-ups, reducing daily meeting friction.
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- 3) Problem Statement -->
+    <section aria-labelledby="problem" class="surface">
+      <h2 id="problem" class="section-title">Problem statement</h2>
+      <p>How might we design a cohesive, compliant, and AI-powered meeting summarization experience for 290K+ employees, ensuring seamless integration, inclusivity, and adaptability across diverse scenarios and personas?</p>
+    </section>
+
+    <!-- 4) Process -->
+    <section aria-labelledby="process" id="process">
+      <h2 id="process" class="section-title">Process</h2>
+      <div class="process-grid">
+        <article class="process-card">
+          <h3 class="process-title">01 Research</h3>
+          <p>Interviews, SUS, heuristics</p>
+        </article>
+        <article class="process-card">
+          <h3 class="process-title">02 Co-design</h3>
+          <p>Workshops, quick sketches</p>
+        </article>
+        <article class="process-card">
+          <h3 class="process-title">03 Prototype</h3>
+          <p>Flows, micro-interactions</p>
+        </article>
+        <article class="process-card">
+          <h3 class="process-title">04 Validate</h3>
+          <p>Usability tests & synthesis</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 5) Experience Flow -->
+    <section aria-labelledby="flow" class="surface">
+      <h2 id="flow" class="section-title">Meeting summary experience flow</h2>
+
+      <div class="flow-grid">
+        <!-- 1 -->
+        <article class="flow-card">
+          <div class="flow-icon">
+            <img src="./assets/public/icons/vid.svg" alt="" aria-hidden="true" />
+          </div>
+          <div class="flow-body">
+            <h3>Join meeting</h3>
+            <p>Employees can join regular meetings and start summarization with standardized messaging informed by device parity analysis, heuristics, and service blueprinting.</p>
+          </div>
+        </article>
+
+        <!-- 2 -->
+        <article class="flow-card">
+          <div class="flow-icon">
+            <img src="./assets/public/icons/email.svg" alt="" aria-hidden="true" />
+          </div>
+          <div class="flow-body">
+            <h3>Get notified</h3>
+            <p>Streamlined notifications deliver summaries based on user preferences and channel choice, informed by workshops and policy constraints.</p>
+          </div>
+        </article>
+
+        <!-- 3 -->
+        <article class="flow-card">
+          <div class="flow-icon">
+            <img src="./assets/public/icons/layout.svg" alt="" aria-hidden="true" />
+          </div>
+          <div class="flow-body">
+            <h3>Meeting portal</h3>
+            <p>Compliance-focused portal for accessing, searching, and sharing meeting insights while maintaining regulatory standards.</p>
+          </div>
+        </article>
+
+        <!-- 4 -->
+        <article class="flow-card">
+          <div class="flow-icon">
+            <img src="./assets/public/icons/sparkle.svg" alt="" aria-hidden="true" />
+          </div>
+          <div class="flow-body">
+            <h3>Agentic access</h3>
+            <p>Future on-the-go access, one-click sharing, templates, and in-house LLM agent tools to assist across integrated applications.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- 6) Service Blueprint -->
+    <section aria-labelledby="blueprint" id="blueprint" class="surface">
+      <h2 id="blueprint" class="section-title">Service blueprinting layered with heuristics analysis</h2>
+      <p class="section-intro">
+        Continuous heuristic evaluations were conducted at multiple stages—both during the initial design phase and while reviewing the UI pilot—to enhance the overall experience and reduce user pain points.
+      </p>
+      <img src="./assets/public/blueprint.png" alt="Service blueprint layered with heuristics analysis" />
+    </section>
+
+    <!-- 7) Ideation & outcomes -->
+    <section aria-labelledby="ideation" id="ideation" class="surface">
+      <h2 id="ideation" class="section-title">Ideation & outcomes</h2>
+      <p class="section-intro">
+        Post UAT testing, and gathering interview insights themes emerged towards personalisation, seamless integration and options for users to review and quick share summaries.
+      </p>
+      <img src="./assets/public/ideation.png" alt="Ideation outcomes board" />
+      <img src="./assets/public/ideation2.png" alt="Ideation outcomes board" style="margin-top:16px" />
+    </section>
+
+    <!-- 8) AI model capabilities testing -->
+    <section aria-labelledby="aimodel" id="aimodel" class="surface">
+      <h2 id="aimodel" class="section-title">AI model capabilities testing</h2>
+      <p class="section-intro">
+        I conducted speech and scenario testing to assess the AI summarization model's compliance and inclusivity, recruiting participants from different regions and testing across varied meeting types. The results showed fair inclusivity but were indicative rather than conclusive due to the uncontrolled environment. The model demonstrated strong compliance by not capturing sensitive information, but also revealed limitations in handling monologues and to mitigate this we suggested the use of different LLM which was more detailed as well.
+      </p>
+      <img src="./assets/public/model-test.png" alt="Model capabilities test results" />
+    </section>
+
+    <!-- 9) Usability findings & synthesis -->
+    <section aria-labelledby="ux" id="ux" class="surface">
+      <h2 id="ux" class="section-title">Usability findings & synthesis</h2>
+      <p class="section-intro">
+        Through post-meeting pilot usability testing and interviews conducted by the research team, along with portal usage data, weekly feedback, and workshops with the product team, I gathered insights that informed future features—including quick sharing, integrating in-house LLM capabilities, and improved search and filtering for the next version of the portal.
+      </p>
+      <img src="./assets/public/usability.png" alt="Usability findings board" />
+    </section>
+
+    <!-- 10) Visual Design & Thought Process (parallax) -->
+    <section aria-labelledby="visual" id="visual">
+      <h2 id="visual" class="section-title">Visual Design & thought process</h2>
+      <div class="parallax-shell">
+        <div class="parallax-shape" id="parallax"></div>
+        <div class="parallax-foreground">
+          <img src="./assets/public/laptopvisual.png" alt="Laptop visual of meeting summary portal" />
+        </div>
+      </div>
+      <p class="disclaimer">
+        All screens are either recreated or blurred to comply with NDA. Sensitive information has been anonymized, and the visuals are intended solely to illustrate design thinking and evolution.
+      </p>
+    </section>
+
+    <!-- 11) Zig-zag feature/story panels -->
+    <section id="journey">
+
+      <section id="zigzag-01" class="zigzag">
+      <div class="zigzag-row left">
+        <div class="zigzag-text">
+          <div class="zig-num-big">01</div>
+          <h3>Initial Design Hypothesis</h3>
+          <p>Envision an end-to-end intelligent meeting summarisation experience.</p>
+          <ul>
+            <li>Integrated quick AI toolbox for context actions.</li>
+            <li>Search & filter as core navigation.</li>
+            <li>Attendees & action items surfaced up front.</li>
+          </ul>
+        </div>
+        <figure class="zigzag-media">
+          <img src="./assets/public/frame-01.png" alt="Early concept mock showing quick AI toolbox and summary layout" />
+        </figure>
+      </div>
+    </section>
+
+    <section id="zigzag-02" class="zigzag">
+      <div class="zigzag-row right">
+        <figure class="zigzag-media">
+          <img src="./assets/public/frame-02.png" alt="Feasibility and MVP prioritisation mockups" />
+        </figure>
+        <div class="zigzag-text">
+          <div class="zig-num-big">02</div>
+          <h3>Post Feasibility & MVP Prioritisation</h3>
+          <p>Align with PM & Eng on feasible V1 and critical path features.</p>
+          <ul>
+            <li>Prioritised "new summary" and "download" as critical path features.</li>
+            <li>Deferred advanced search/filter to later validation.</li>
+            <li>Scoped interaction to single-page summary view to accelerate delivery.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="zigzag-03" class="zigzag">
+      <div class="zigzag-row left">
+        <div class="zigzag-text">
+          <div class="zig-num-big">03</div>
+          <h3>User Interviews & Usability Feedback</h3>
+          <p>Validate V1 experience; identify usability gaps.</p>
+          <ul>
+            <li>High value in filters, meeting type, and quick sharing.</li>
+            <li>Need fast retrieval and preference controls.</li>
+          </ul>
+        </div>
+        <figure class="zigzag-media">
+          <img src="./assets/public/frame-03.png" alt="Usability session screenshots with annotations" />
+        </figure>
+      </div>
+    </section>
+
+    <section id="zigzag-04" class="zigzag">
+      <div class="zigzag-row right">
+        <figure class="zigzag-media">
+          <img src="./assets/public/frame-04.png" alt="Evolved designs integrating insights and preferences" />
+        </figure>
+        <div class="zigzag-text">
+          <div class="zig-num-big">04</div>
+          <h3>Integrating Insights (Day 2 / V2 Evolution)</h3>
+          <p>Evolve design through evidence-based iteration.</p>
+          <ul>
+            <li>Introduced Preference Settings panel within the portal (Day 2).</li>
+            <li>Integrated Quick Share flows into both the summary view and AI toolbox.</li>
+            <li>Adopted floating search/filter & AI toolbox to balance flexibility with compliance limitations.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    </section><!-- end #journey wrapper -->
+
+    <!-- 12) Highlights + Learnings (optional cards) -->
+    <section id="solution-highlights" class="surface">
+      <h2 class="section-title">Solution Highlights</h2>
+      <ul class="bullets">
+        <li>AI-generated meeting summaries portal for central access.</li>
+        <li>Scenario testing framework to improve summary quality.</li>
+        <li>Multi-device consistency for seamless adoption.</li>
+        <li>Action-item notifications for accountability.</li>
+      </ul>
+    </section>
+
+    <section id="key-learnings" class="surface">
+      <h2 class="section-title">Key learnings/Reflections</h2>
+      <ul class="bullets">
+        <li>Designing AI-first experiences while balancing trust and usability.</li>
+        <li>Scaling enterprise adoption via cross-functional alignment.</li>
+        <li>Rapid iteration, pilot launches, measurable metrics for adoption.</li>
+      </ul>
+    </section>
+
+    <!-- 13) CTAs -->
+    <section class="stack">
+      <div class="cta">CTA placeholder</div>
+      <div class="cta">CTA placeholder</div>
+    </section>
+
+    
+    <!-- Watermark -->
+    <div class="watermark">© Shivangini Singh — AI Meeting Summarisation</div>
+  </div>
+
+
+  <script>
+    // minimal parallax (very subtle)
+    const shape = document.getElementById('parallax');
+    const mql = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if(shape && !mql.matches){
+      const speed = 0.12; // slow and subtle
+      const onScroll = () => {
+        const rect = shape.parentElement.getBoundingClientRect();
+        const center = rect.top + rect.height/2 - window.innerHeight/2;
+        const y = -center * speed;
+        shape.style.transform = `translateY(${y.toFixed(1)}px) rotate(-8deg)`;
+      };
+      onScroll();
+      window.addEventListener('scroll', onScroll, {passive:true});
+    }
+
+    // Subtle parallax on Impact
+    (() => {
+      const el = document.getElementById('impactParallax');
+      const mql = window.matchMedia('(prefers-reduced-motion: reduce)');
+      if (!el || mql.matches) return;
+
+      const speed = 0.06; // gentle
+      const onScroll = () => {
+        const y = Math.min(0, window.scrollY * -speed);
+        el.style.transform = `translateY(${y.toFixed(1)}px)`;
+      };
+      onScroll();
+      window.addEventListener('scroll', onScroll, {passive:true});
+    })();
+
+    // Close & Top buttons
+    (() => {
+      const btnClose = document.getElementById('btnClose');
+      const btnTop   = document.getElementById('btnTop');
+
+      // actions
+      btnClose?.addEventListener('click', () => {
+        window.location.href = 'index.html#case-studies';
+      });
+
+      btnTop?.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      // keep close button always visible
+      if (btnClose) btnClose.style.opacity = '1';
+      
+      // Keyboard accessibility - Escape key to close
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          if (btnClose && btnClose.offsetParent !== null) {
+            btnClose.click();
+          }
+        }
+      });
+    })();
+
+
+    // Back button: show after scrolling
+    (() => {
+      const btn = document.getElementById('backBtn');
+      if (!btn) return;
+
+      // show after the user scrolls a bit
+      const showAt = 80; // px
+      const onScroll = () => {
+        if (window.scrollY > showAt) btn.classList.add('is-visible');
+        else btn.classList.remove('is-visible');
+      };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+
+      // behavior: go back if possible, else scroll to top
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (window.history.length > 1) history.back();
+        else window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    })();
+
+    // noop any previous backBtn code
+    (() => {
+      const _b = document.getElementById('backBtn');
+      if (_b) _b.remove();
+    })();
+
+
+    // Process cards: guaranteed render with inline SVG icons
+    (() => {
+      const host = document.querySelector('#process .process-grid');
+      if (!host) return;
+
+      const cards = [
+        {
+          title: "Research & Discovery",
+          bullets: [
+            "Analyzed meeting data patterns, employee behaviors, and existing pain points.",
+            "Conducted interviews and quick validations with target users."
+          ],
+          icon: 'assets/icons/process-research.svg'
+        },
+        {
+          title: "Ideation & Testing",
+          bullets: [
+            "Explored multiple AI summary interaction models.",
+            "Ran scenario testing to improve AI accuracy and trustworthiness."
+          ],
+          icon: 'assets/icons/process-ideation.svg'
+        },
+        {
+          title: "Design & Delivery",
+          bullets: [
+            "Built a centralized portal for AI meeting summaries.",
+            "Designed for consistency across desktop and mobile.",
+            "Created notification and reminder flows for action items."
+          ],
+          icon: 'assets/icons/process-delivery.svg'
+        },
+        {
+          title: "Iteration & Feedback",
+          bullets: [
+            "Gathered feedback through pilot launches.",
+            "Measured usability, trust, and adoption metrics.",
+            "Incorporated cross-functional feedback (product, tech, legal)."
+          ],
+          icon: 'assets/icons/process-iteration.svg'
+        }
+      ];
+
+      host.innerHTML = cards.map(c => `
+        <article class="process-card">
+          <img class="process-icon" src="${c.icon}" width="40" height="40" alt="">
+          <h3 class="process-title">${c.title}</h3>
+          <ul class="process-bullets">${c.bullets.map(b=>`<li>${b}</li>`).join('')}</ul>
+        </article>
+      `).join('');
+    })();
+
+    // Absolute hammer via JS for journey spacing (in case styles are injected later)
+    (() => {
+      const root = document.querySelector('#journey');
+      if (!root) return;
+      const items = root.querySelectorAll('.journey-item, article, .card, .step, .row');
+      items.forEach(n => {
+        n.style.marginTop  = '10px';
+        n.style.marginBottom = '10px';
+        n.style.paddingTop = '8px';
+        n.style.paddingBottom = '8px';
+      });
+      const img = root.querySelectorAll('.journey-img');
+      img.forEach(n => n.style.marginTop = '6px');
+    })();
+  </script>
+  
+  <!-- Content hydration -->
+  <script type="module">
+    import { content } from "/assets/js/content.js";
+
+    // Impact boxes
+    const impactEl = document.querySelector("#impact");
+    if (impactEl) {
+      impactEl.innerHTML = content.impact.map(i => `
+        <div class="impact-card">
+          <div class="impact-value">${i.value}</div>
+          <div class="impact-label">${i.label}</div>
+        </div>`).join("");
+    }
+
+    // Process cards
+    const procEl = document.querySelector("#process-cards");
+    if (procEl) {
+      procEl.innerHTML = content.process.map(p => `
+        <article class="proc-card">
+          <img class="proc-icon" src="/assets/icons/${p.icon}" alt="">
+          <h3>${p.title}</h3>
+          <ul>${p.points.map(pt=>`<li>${pt}</li>`).join("")}</ul>
+        </article>`).join("");
+    }
+  </script>
+  
+  <!-- Floating navigation pills -->
+  
+  <!-- Navigation active state -->
+  <script src="nav.js" defer></script>
+  <script defer src="js/nav.v2.js"></script>
+  
+  <!-- Scroll-to-top functionality -->
+  <script>
+    (() => {
+      const btn = document.getElementById('scrollTop');
+      if (!btn) return;
+      
+      const showAfter = 600;
+      const onScroll = () => btn.classList.toggle('is-hidden', window.scrollY <= showAfter);
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+      
+      btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    })();
+
+    // Show scroll button only when user scrolls down
+    const scrollBtn = document.getElementById("scrollTopBtn");
+    window.onscroll = () => {
+      if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200)
+        scrollBtn.style.display = "flex";
+      else scrollBtn.style.display = "none";
+    };
+
+    // Smooth scroll to top
+    scrollBtn.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+</script>
+<script src="js/safe-nav.js" defer></script>
+</body>
+</html>

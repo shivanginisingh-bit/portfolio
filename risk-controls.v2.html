@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Risk & Controls — Case Study</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="rc.css" />
+  <link rel="stylesheet" href="css/nav-final.css" />
+  <link rel="stylesheet" href="css/nav.v2.css" />
+</head>
+<body class="rc cs-page case-study">
+
+<!-- Scroll-to-Top Button -->
+<button id="scrollTopBtn" class="scroll-btn" aria-label="Scroll to top" tabindex="0">
+  <img src="images/buttons/scroll.svg" alt="Scroll to top" style="width: 56px; height: auto;" />
+</button>
+
+<!-- Header -->
+<header class="navv2-header" role="banner">
+  <div class="navv2-wrap">
+    <a class="navv2-brand" href="index.html">the.shivangini.singh</a>
+
+    <!-- Desktop links -->
+    <nav class="navv2-desktop" aria-label="Primary">
+      <a href="work.html" data-key="work">work</a>
+      <a href="about.html" data-key="about">about me</a>
+      <a href="blog.html" data-key="blog">blog</a>
+      <a href="contact.html" data-key="contact">contact me</a>
+    </nav>
+
+    <!-- Mobile pill -->
+    <button class="navv2-toggle" aria-expanded="false" aria-controls="navv2-panel">
+      <span class="navv2-toggle-label">menu</span>
+      <span class="navv2-toggle-icon" aria-hidden="true"></span>
+    </button>
+  </div>
+
+  <!-- Mobile panel -->
+  <div id="navv2-panel" class="navv2-panel" hidden>
+    <nav class="navv2-panel-inner" aria-label="Mobile menu">
+      <a class="navv2-link" href="about.html">about me</a>
+      <a class="navv2-link" href="work.html">work</a>
+      <a class="navv2-link" href="blog.html">blog</a>
+      <a class="navv2-link" href="contact.html">contact me</a>
+    </nav>
+  </div>
+</header>
+
+  <!-- Banner: full-bleed with close pill -->
+  <section class="rc-banner">
+    <button class="rc-close" onclick="window.location.href='index.html#case-studies'" aria-label="Close case study" tabindex="0">close <span>✕</span></button>
+    <div class="rc-banner__art" aria-hidden="true"></div>
+  </section>
+
+  <!-- Title on white, under banner -->
+  <section class="section intro">
+    <h1 class="page-title">Risk & Controls</h1>
+  </section>
+
+  <section class="section impact">
+    <h2>Impact</h2>
+    <div class="impact__grid" id="impactGrid"></div>
+  </section>
+
+  <section class="section challenge" id="challenge">
+    <h2>Challenge</h2>
+    <div class="challenge__box">
+      <ul class="challenge__list">
+        <li>Employees faced complex, outdated flows in risk & control tasks.</li>
+        <li>Accessibility gaps → flagged in audits and compliance reviews.</li>
+        <li>Verification tasks were time-consuming and error-prone, creating productivity loss.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Challenge Image - Outside the section -->
+  <section class="section challenge-image">
+    <div class="challenge__image">
+      <div class="challenge__frame">
+        <img src="assets/rc/challenge.png" alt="Challenge insights visualization">
+      </div>
+    </div>
+  </section>
+
+  <section class="section vision">
+    <h2>Vision & goal</h2>
+
+    <div class="vision__grid">
+      <article class="vision__card">
+        <div class="vision__top">
+          <h3 class="vision__heading">
+            <span class="vision__num">01</span>
+            <span class="vision__title">Accessible by default</span>
+          </h3>
+        </div>
+        <p>Ensure all employees, regardless of ability, can complete verification tasks.</p>
+      </article>
+
+      <article class="vision__card">
+        <div class="vision__top">
+          <h3 class="vision__heading">
+            <span class="vision__num">02</span>
+            <span class="vision__title">Efficiency at scale</span>
+          </h3>
+        </div>
+        <p>Simplify flows so that information is organised, and errors are reduced.</p>
+      </article>
+
+      <article class="vision__card">
+        <div class="vision__top">
+          <h3 class="vision__heading">
+            <span class="vision__num">03</span>
+            <span class="vision__title">Compliance-led design</span>
+          </h3>
+        </div>
+        <p>Ensure adherence to<br>WCAG 2.1 and enterprise<br>standards.</p>
+      </article>
+
+      <article class="vision__card">
+        <div class="vision__top">
+          <h3 class="vision__heading">
+            <span class="vision__num">04</span>
+            <span class="vision__title">Value to users</span>
+          </h3>
+        </div>
+        <p>Reduce risk, and turn checks from a burden into a seamless part of daily workflows.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- Disclaimer -->
+  <section class="section disclaimer">
+    <p class="disclaimer__text">All screens are either recreated or blurred to comply with NDA. Sensitive information has been anonymized, and the visuals are intended solely to illustrate design thinking and evolution.</p>
+  </section>
+
+  <section class="section role">
+    <h2>My role &amp; process</h2>
+    <div class="role__box">
+      <ul class="role__list">
+        <li><strong>Research &amp; Discovery:</strong> Heuristics evaluation, accessibility audits, workshops and creating task flows.</li>
+        <li><strong>Design &amp; Iteration:</strong> Wireframes, prototyping, UI designing, and micro-animations.</li>
+        <li><strong>Collaboration:</strong> Partnered with compliance/legal + engineering to align on WCAG standards, content, and UI reviews.</li>
+        <li><strong>Validation:</strong> Guerrilla testing with regional users for quick feedback and setting up research objectives for usability testing.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Process Image -->
+  <section class="section process-image">
+    <div class="process__image">
+      <img src="assets/rc/process.png" alt="Process workflow visualization" loading="lazy" decoding="async">
+    </div>
+  </section>
+
+  <!-- ACCESSIBILITY UPLIFT -->
+  <section class="section accessibility" id="accessibility">
+    <h2>Accessibility uplift</h2>
+    <p class="accessibility__sub">
+      Across critical WCAG checkpoints — measurable improvements post-redesign
+    </p>
+
+    <div class="accessibility__table" role="table" aria-label="WCAG Accessibility Uplift">
+      <!-- Header -->
+      <div class="a11y-row a11y-row--head" role="row">
+        <div class="a11y-col a11y-col--cat" role="columnheader">Category</div>
+        <div class="a11y-col a11y-col--before" role="columnheader">Before (baseline)</div>
+        <div class="a11y-col a11y-col--after" role="columnheader">After (post fixes)</div>
+        <div class="a11y-col a11y-col--delta" role="columnheader">Delta</div>
+        <div class="a11y-col a11y-col--notes" role="columnheader">WCAG ref + key improvements</div>
+      </div>
+
+      <!-- Row 1 -->
+      <div class="a11y-row" role="row">
+        <div class="a11y-col a11y-col--cat" role="cell">
+          <span class="a11y-icon" aria-hidden="true">🔈</span>
+          <div class="a11y-cat">
+            <strong>Screen Reader Support</strong>
+          </div>
+        </div>
+
+        <div class="a11y-col a11y-col--before" role="cell">
+          <div class="bar bar--before" data-target="40">
+            <span class="bar__value">40%</span>
+          </div>
+        </div>
+
+        <div class="a11y-col a11y-col--after" role="cell">
+          <div class="bar bar--after" data-target="90">
+            <span class="bar__value">90%</span>
+          </div>
+        </div>
+
+        <div class="a11y-col a11y-col--delta" role="cell">
+          <span class="delta">+50% ↑</span>
+        </div>
+
+        <div class="a11y-col a11y-col--notes" role="cell">
+          <span class="wcag-tag">1.3.1 / 1.3.2</span>
+          <p>Dialog/label semantics standardized; domains/emails read correctly; ARIA roles fixed.</p>
+        </div>
+      </div>
+
+      <!-- Row 2 -->
+      <div class="a11y-row" role="row">
+        <div class="a11y-col a11y-col--cat" role="cell">
+          <span class="a11y-icon" aria-hidden="true">⌨️</span>
+          <div class="a11y-cat"><strong>Keyboard Navigation</strong></div>
+        </div>
+        <div class="a11y-col a11y-col--before" role="cell">
+          <div class="bar bar--before" data-target="25"><span class="bar__value">25%</span></div>
+        </div>
+        <div class="a11y-col a11y-col--after" role="cell">
+          <div class="bar bar--after" data-target="80"><span class="bar__value">80%</span></div>
+        </div>
+        <div class="a11y-col a11y-col--delta" role="cell"><span class="delta">+55% ↑</span></div>
+        <div class="a11y-col a11y-col--notes" role="cell">
+          <span class="wcag-tag">2.1.1</span>
+          <p>Arrow/Tab/Space navigation enabled; toggles fully operable.</p>
+        </div>
+      </div>
+
+      <!-- Row 3 -->
+      <div class="a11y-row" role="row">
+        <div class="a11y-col a11y-col--cat" role="cell">
+          <span class="a11y-icon" aria-hidden="true">◻️</span>
+          <div class="a11y-cat"><strong>Info &amp; Relationships</strong></div>
+        </div>
+        <div class="a11y-col a11y-col--before" role="cell">
+          <div class="bar bar--before" data-target="50"><span class="bar__value">50%</span></div>
+        </div>
+        <div class="a11y-col a11y-col--after" role="cell">
+          <div class="bar bar--after" data-target="90"><span class="bar__value">90%</span></div>
+        </div>
+        <div class="a11y-col a11y-col--delta" role="cell"><span class="delta">+40% ↑</span></div>
+        <div class="a11y-col a11y-col--notes" role="cell">
+          <span class="wcag-tag">1.3.1</span>
+          <p>Mandatory fields + semantic hierarchy standardized.</p>
+        </div>
+      </div>
+
+      <!-- Row 4 -->
+      <div class="a11y-row" role="row">
+        <div class="a11y-col a11y-col--cat" role="cell">
+          <span class="a11y-icon" aria-hidden="true">ℹ️</span>
+          <div class="a11y-cat"><strong>Consistency &amp; Compliance</strong></div>
+        </div>
+        <div class="a11y-col a11y-col--before" role="cell">
+          <div class="bar bar--before" data-target="35"><span class="bar__value">35%</span></div>
+        </div>
+        <div class="a11y-col a11y-col--after" role="cell">
+          <div class="bar bar--after" data-target="85"><span class="bar__value">85%</span></div>
+        </div>
+        <div class="a11y-col a11y-col--delta" role="cell"><span class="delta">+50% ↑</span></div>
+        <div class="a11y-col a11y-col--notes" role="cell">
+          <span class="wcag-tag">1.3 / 3.3</span>
+          <p>Standardized patterns across dialogs; reduced rework &amp; barriers.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Visual design flow (keep image only; heading removed) -->
+  <section class="visual-flow section">
+    <h2>Visual design flow</h2>
+    <div class="image-wrapper">
+      <img src="assets/rc/visual-flow.png" alt="Visual design flow" />
+    </div>
+  </section>
+
+  <!-- The Fun Stuff (moved above Usability; no section heading) -->
+  <section class="fun-stuff section">
+    <h2>The fun stuff!</h2>
+    <p class="fun-stuff__intro">Amongst all requirements, one seemed like a simple re-design of a pop up, but to me it was an opportunity to bring in delight for the users. Since I was designing for native application of Microsoft, using the Fluent 2 3D illustration style to recreate the look and feel.</p>
+    <div class="fun-grid">
+      <div class="fun-card">
+        <div class="fun-img-wrapper">
+          <img src="assets/rc/before.png" alt="Before re-design screen">
+        </div>
+        <h3>Before re-design</h3>
+      </div>
+
+      <div class="fun-card fun-card--gif">
+        <div class="fun-img-wrapper">
+          <img src="assets/rc/middle.gif" alt="Delightful animation during redesign">
+        </div>
+        <h3>Bringing in delight</h3>
+      </div>
+
+      <div class="fun-card">
+        <div class="fun-img-wrapper blurred">
+          <img src="assets/rc/after.png" alt="Redesigned experience blurred preview">
+        </div>
+        <h3>Redesigned experience</h3>
+      </div>
+    </div>
+  </section>
+
+  <!-- Usability Testing Insights (stays below) -->
+  <section class="usability section">
+    <h2>Usability testing insights</h2>
+    <ul class="usability__list">
+      <li>Conducted quick guerrilla and remote usability sessions across two regions to validate early design iterations.</li>
+      <li>Observed behavioral friction around repetitive tasks, navigation clarity, and time spent in multi-step workflows.</li>
+      <li>Identified the need for simplified interaction patterns, clearer next actions, and more contextual guidance for users.</li>
+    </ul>
+    <div class="image-wrapper">
+      <img src="assets/rc/usability.png" alt="Usability insights">
+    </div>
+  </section>
+
+  <!-- LEARNINGS -->
+  <section class="section learnings">
+    <h2>Key learnings & reflection</h2>
+    <div class="learnings__box">
+      <ul class="learnings__list">
+        <li>Designing for scale required balancing compliance, accessibility, and speed.</li>
+        <li>Learned the importance of a compliance-driven environment.</li>
+        <li>Delight can still be factored in, even in the smallest interactions.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- NDA Disclaimer -->
+  <p class="nda-note">
+    All screens are either recreated or blurred to comply with NDA. Sensitive information has been anonymized, and the visuals are intended solely to illustrate design thinking and evolution.
+  </p>
+
+
+  <script src="content.js" defer></script>
+  <script defer src="js/nav.v2.js"></script>
+  <script>
+(function () {
+  const data = window.CASESTUDIES?.riskControls;
+  if (!data) return;
+
+  // tokens
+  document.documentElement.style.setProperty("--left-pad", (data.meta.leftPad||140) + "px");
+  document.documentElement.style.setProperty("--content-max", (data.meta.contentMax||1040) + "px");
+
+  // title
+  const titleEl = document.querySelector(".page-title");
+  if (titleEl) {
+    titleEl.textContent = data.meta.title;
+  }
+
+  // impact
+  const impactGrid = document.getElementById("impactGrid");
+  if (impactGrid) {
+    impactGrid.innerHTML = data.impact.map(block => {
+      let body = "";
+      if (block.kpi) {
+        body = `<p>${block.body || ""}</p>`;
+      } else if (block.bullets) {
+        body = `<ul>${block.bullets.map(b => `<li>${b}</li>`).join("")}</ul>`;
+      }
+      return `
+        <article class="card">
+          <h3>${block.kpi || "Key Benefits"}</h3>
+          <div class="sub">${body}</div>
+        </article>
+      `;
+    }).join("");
+  }
+
+  // challenge
+  const cl = document.getElementById("challenge-list");
+  data.challenge.forEach(t => { const li = document.createElement("li"); li.textContent = t; cl.appendChild(li); });
+
+
+  // process
+  const pp = document.getElementById("process-points");
+  data.process.points.forEach(t => { const li = document.createElement("li"); li.innerHTML = t; pp.appendChild(li); });
+  const pImg = document.getElementById("process-image");
+  if (pImg) { pImg.src = data.process.image; pImg.alt = data.process.imageAlt || "Process"; }
+
+  // ACCESSIBILITY UPLIFT
+  if (data.accessibility){
+    document.getElementById("acc-title").textContent = data.accessibility.title;
+    document.getElementById("acc-note").textContent  = data.accessibility.note || "";
+    const wrap = document.getElementById("acc-rows");
+    data.accessibility.rows.forEach(r=>{
+      const row = document.createElement("div");
+      row.className = "row";
+      row.innerHTML = `
+        <div class="label">${r.label}</div>
+        <div class="meter" data-target="${r.after}">
+          <div class="fill"></div>
+        </div>
+        <div class="nums">${r.before}% → <strong>${r.after}%</strong></div>
+      `;
+      wrap.appendChild(row);
+    });
+
+    const io = new IntersectionObserver(entries=>{
+      entries.forEach(e=>{
+        if(!e.isIntersecting) return;
+        e.target.querySelectorAll(".meter").forEach(m=>{
+          const t = +m.dataset.target || 0;
+          m.querySelector(".fill").style.width = t + "%";
+        });
+        io.disconnect();
+      });
+    }, {threshold: .25});
+    const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion){
+      document.querySelectorAll(".acc .meter").forEach(m=>{
+        const t = +m.dataset.target || 0;
+        const f = m.querySelector(".fill");
+        f.style.transition = "none"; f.style.width = t + "%";
+      });
+    } else {
+      io.observe(document.querySelector(".acc"));
+    }
+  }
+
+  // visual design flow
+  const vf = document.getElementById("visual-flow");
+  if (vf && data.visualFlow?.image) { vf.src = data.visualFlow.image; vf.alt = data.visualFlow.imageAlt || "Visual design flow"; }
+
+  // BEFORE / AFTER
+  if (data.beforeAfter){
+    document.getElementById("ba-title").textContent = data.beforeAfter.title;
+    document.getElementById("ba-sub").textContent   = data.beforeAfter.subtitle || "";
+    const b = document.getElementById("ba-before");
+    const a = document.getElementById("ba-after");
+    b.src = data.beforeAfter.before; b.alt = "Before";
+    a.src = data.beforeAfter.after;  a.alt = "After";
+  }
+
+  // usability
+  document.getElementById("usability-title").textContent = data.usability.title;
+  const ub = document.getElementById("usability-bullets");
+  data.usability.bullets.forEach(t => { const li = document.createElement("li"); li.textContent = t; ub.appendChild(li); });
+  const uImg = document.getElementById("usability-image");
+  if (uImg) { uImg.src = data.usability.image; uImg.alt = data.usability.imageAlt || "Usability"; }
+
+  // learnings
+  const ll = document.getElementById("learnings-list");
+  data.learnings.forEach(t => { const li = document.createElement("li"); li.textContent = t; ll.appendChild(li); });
+
+  // disclaimer + watermark
+  document.getElementById("disclaimer").textContent = data.disclaimer;
+  document.getElementById("signature").textContent = data.watermark.text;
+})();
+
+// Accessibility progress bar animation
+function hydrateBars() {
+  // 1) Grab all bars
+  const bars = document.querySelectorAll('.accessibility .bar');
+  if (!bars.length) {
+    console.warn('[a11y-bars] No .bar elements found');
+    return;
+  }
+
+  bars.forEach(bar => {
+    // 2) Ensure a fill element exists
+    let fill = bar.querySelector('.bar__fill');
+    if (!fill) {
+      fill = document.createElement('div');
+      fill.className = 'bar__fill';
+      bar.prepend(fill); // put behind label
+    }
+
+    // 3) Read target %
+    const pct = Math.max(0, Math.min(100, Number(bar.dataset.target || 0)));
+    if (pct < 18) bar.classList.add('tiny');
+
+    // 4) Set bubble text if missing
+    let bubble = bar.querySelector('.bar__value');
+    if (!bubble) {
+      bubble = document.createElement('span');
+      bubble.className = 'bar__value';
+      bubble.textContent = pct + '%';
+      bar.appendChild(bubble);
+    } else {
+      bubble.textContent = pct + '%';
+    }
+
+    // 5) Animate width (next frame so transition applies)
+    requestAnimationFrame(() => {
+      fill.style.width = pct + '%';
+      bubble.style.left = pct + '%';
+    });
+  });
+}
+
+// Run once DOM is parsed (defer guarantees this), plus a safety fallback
+document.addEventListener('DOMContentLoaded', hydrateBars);
+setTimeout(() => {
+  // If something delayed render, this ensures it still runs
+  try { hydrateBars(); } catch(e) { console.error(e); }
+}, 300);
+  </script>
+
+  <!-- Site Footer -->
+  <footer class="site-footer section">
+    <p>© Shivangini Singh — Risk & Controls</p>
+  </footer>
+
+  <script>
+    // Show scroll button only when user scrolls down
+    const scrollBtn = document.getElementById("scrollTopBtn");
+    window.onscroll = () => {
+      if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200)
+        scrollBtn.style.display = "flex";
+      else scrollBtn.style.display = "none";
+    };
+
+    // Smooth scroll to top
+    scrollBtn.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+    
+    // Keyboard accessibility - Escape key to close
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const closeButton = document.querySelector('.rc-close');
+        if (closeButton && closeButton.offsetParent !== null) {
+          closeButton.click();
+        }
+      }
+    });
+  </script>
+</body>
+</html>

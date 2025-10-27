@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Work - Portfolio projects by Shivangini Singh, UX Designer">
+    <title>Work - the.shivangini.singh</title>
+    
+    <!-- Link to external CSS file -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/buttons.css">
+    <link rel="stylesheet" href="css/nav-final.css">
+    <link rel="stylesheet" href="css/nav.v2.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="theme-dark page-work">
+  <header class="site-header" data-theme="dark">
+    <div class="nav-wrap">
+      <a class="brand" href="index.html">the.shivangini.singh</a>
+    </div>
+  </header>
+
+  <main class="work-main">
+    <!-- Centered link above cards -->
+    <div class="centered-row" style="display: none;">
+      <a href="about.html">about me</a>
+    </div>
+
+    <section class="work-grid" aria-label="Case studies" id="cards">
+      <!-- Scaling Sustainability Card -->
+      <article class="work-card" data-key="scaling">
+        <img src="images/scaling-sustainability.png" alt="" class="work-card__img" />
+        <a class="work-card__link" href="scaling-sustainability.html" aria-label="Scaling Sustainability case study"></a>
+      </article>
+
+      <!-- Risk & Controls Card -->
+      <article class="work-card" data-key="risk">
+        <img src="images/risk-controls.png" alt="" class="work-card__img" />
+        <a class="work-card__link" href="risk-controls.v2.html" aria-label="Risk & Controls case study"></a>
+      </article>
+
+      <!-- AI Meeting Summarisation Card -->
+      <article class="work-card" data-key="ai-meeting">
+        <img src="images/ai-meeting.png" alt="" class="work-card__img" />
+        <a class="work-card__link" href="ai-meeting-case-study.html" aria-label="AI Meeting Summarisation case study"></a>
+      </article>
+    </section>
+
+    <!-- Jump to gallery -->
+    <div class="centered-row">
+      <a href="#gallery">other works</a>
+    </div>
+
+    <!-- small caption line -->
+    <section class="work-disclaimer" aria-label="Disclaimer">
+      <p>Non-case study work done in the past. Some are exploratory, some shipped. Select items include animated previews.</p>
+    </section>
+
+    <!-- masonry media gallery -->
+    <section id="case-studies" class="work-gallery section-case-studies" aria-label="Gallery">
+      <div class="masonry" id="masonry"></div>
+    </section>
+
+  </main>
+
+  <!-- Floating back-to-top button -->
+  <button id="scrollTop" class="back-to-top" aria-label="Back to top">
+    <img src="images/buttons/scroll.svg" alt="Scroll to top" style="width: 56px; height: auto;">
+  </button>
+
+
+  <!-- Scroll-to-top functionality -->
+  <script>
+    (function() {
+      const scrollBtn = document.getElementById("scrollTop");
+      if (!scrollBtn) return;
+      
+      // Setup button styles
+      scrollBtn.style.display = "flex";
+      scrollBtn.style.position = "fixed";
+      scrollBtn.style.bottom = "20px";
+      scrollBtn.style.right = "20px";
+      scrollBtn.style.zIndex = "9999";
+      scrollBtn.style.background = "transparent";
+      scrollBtn.style.border = "none";
+      scrollBtn.style.outline = "none";
+      scrollBtn.style.cursor = "pointer";
+      
+      // Show/hide button on scroll
+      window.addEventListener('scroll', function() {
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        if (scrollTop > 200) {
+          scrollBtn.classList.add("show");
+        } else {
+          scrollBtn.classList.remove("show");
+        }
+      });
+
+      // Scroll to top when clicked
+      scrollBtn.addEventListener("click", function() {
+        // Scroll both window and document element for maximum compatibility
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        document.documentElement.scrollTo({ top: 0, behavior: "smooth" });
+        document.body.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    })();
+  </script>
+
+  <!-- Tighter dropdown styling -->
+  <style>
+    [data-nav="dropdown"] { min-width: 220px !important; }
+    [data-nav="dropdown"] a { font-size: 14px !important; padding: 10px 12px !important; }
+    
+    /* Remove red outline/background on scroll button */
+    button#scrollTop,
+    button#scrollTop img,
+    .back-to-top,
+    .back-to-top img {
+      border: none !important;
+      outline: none !important;
+      box-shadow: none !important;
+      background: transparent !important;
+    }
+    
+    /* Remove inline red background from script */
+    button#scrollTop[style*="background"] {
+      background: transparent !important;
+    }
+  </style>
+
+  <script src="work.js" defer></script>
+  <script src="main.js" defer></script>
+  <script src="js/nav-unified.js"></script>
+</body>
+</html>

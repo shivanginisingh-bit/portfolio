@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="About Shivangini Singh - UX Designer with 12+ years of experience in interaction design, service design, and design systems">
+    <title>About Me - the.shivangini.singh</title>
+    
+    <!-- Anti-flicker: paint final colors immediately and suppress transitions just for first frame -->
+    <style>
+      /* About is dark-themed — render final bg/text before any JS runs */
+      html { background: #000; color-scheme: dark; }
+      /* Stop all transitions/animations until we remove this class */
+      html.no-flicker, html.no-flicker * {
+        transition: none !important;
+        animation: none !important;
+      }
+      /* Avoid logo/header color flash: render final colors immediately (adjust if your theme uses different shades) */
+      .site-header, .logo { color: #fff; }
+    </style>
+    
+    <!-- Favicon (PNG) — use relative path (works for file:// too) -->
+    <link rel="icon" href="images/FAVICON.png" type="image/png" sizes="32x32">
+    <link rel="apple-touch-icon" href="images/FAVICON.png">
+    <link rel="shortcut icon" href="images/FAVICON.png">
+    
+    <!-- Link to external CSS file -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/buttons.css">
+    <link rel="stylesheet" href="css/nav.v2.css">
+    <link rel="stylesheet" href="css/nav-final.css">
+    
+    <!-- Google Fonts - for beautiful typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="theme-dark page--about dark" data-nav-theme="dark">
+    <!-- Remove anti-flicker after first frame (works with back/forward cache too) -->
+    <script>
+      document.documentElement.classList.add('no-flicker');
+      window.addEventListener('pageshow', function(){ requestAnimationFrame(function(){
+        document.documentElement.classList.remove('no-flicker');
+      });});
+    </script>
+    
+    <!-- IMMEDIATE FIX: Force page to be visible -->
+    <script>
+      (function() {
+        // Force page to be visible immediately
+        document.documentElement.style.background = '#ffffff';
+        document.body.style.background = '#ffffff';
+        document.body.style.color = '#000000';
+        document.body.style.overflow = 'auto';
+        
+        // Remove any transition classes
+        document.body.classList.remove('is-transitioning');
+        
+        // Hide any wipe overlays
+        ['wipe','page-wipe','route-wipe','route-overlay','transition-mask','wipe-overlay']
+          .forEach(id => { 
+            const el = document.getElementById(id); 
+            if (el) {
+              el.style.display = 'none';
+              el.style.opacity = '0';
+              el.style.pointerEvents = 'none';
+            }
+          });
+      })();
+    </script>
+    <!-- Header -->
+    <header class="site-header" data-theme="dark">
+      <div class="nav-wrap">
+        <a class="brand" href="index.html">the.shivangini.singh</a>
+
+        <!-- mobile dropdown trigger -->
+        <button class="nav-pill" id="navBtn" data-nav="menu-btn" aria-expanded="false">
+          <span data-nav="label">menu</span>
+          <span class="nav-icon" aria-hidden="true"></span>
+        </button>
+
+        <!-- desktop inline links -->
+        <nav class="nav-inline" aria-label="Primary">
+          <a href="index.html#case-studies" data-nav="work">work</a>
+          <a href="about.html" data-nav="about">about me</a>
+          <a href="https://medium.com/@shivanginisingh" data-nav="blog" target="_blank" rel="noopener">blog</a>
+          <a href="contact.html" data-nav="contact">contact me</a>
+        </nav>
+
+        <!-- mobile sheet -->
+        <div class="nav-sheet" id="navSheet" hidden>
+          <nav class="nav-list" aria-label="Primary mobile">
+            <a href="about.html" data-nav="about">about me</a>
+            <a href="index.html#case-studies"  data-nav="work">work</a>
+            <a href="https://medium.com/@shivanginisingh" data-nav="blog" target="_blank" rel="noopener">blog</a>
+            <a href="contact.html" data-nav="contact">contact me</a>
+          </nav>
+        </div>
+        <div class="nav-scrim" id="navScrim" hidden></div>
+      </div>
+    </header>
+    
+    <!-- ABOUT SECTION -->
+    <section id="about" class="about-hero container">
+        <div class="about-copy">
+            <h1>about me</h1>
+
+            <!-- 629 × 511 body copy box -->
+            <div class="about-body">
+                <p>Hi! I'm based out of Bangalore.</p>
+                <p>I've been designing experiences for over 12 years across enterprise and consumer products. My focus is turning complexity into clarity—building AI-assisted workflows, scalable design systems, and journeys that feel effortless for people and effective for business.</p>
+                <p>I believe experiences can be delightful while being functional. I enjoy the full stack of design, but my strengths are empathy, collaboration, and divergent thinking. When I'm not at my desk, you'll find me reading, illustrating, doing yoga, aqua-scaping, or learning to shoot videos—anything that keeps me curious and connected to the world around me.</p>
+
+                <!-- skills pills (unchanged content, only wrapped for layout) -->
+                <div class="about-pills">
+                    <span class="pill">iconography</span>
+                    <span class="pill">typography</span>
+                    <span class="pill">illustrations</span>
+                    <span class="pill">animation</span>
+                    <span class="pill">layout design</span>
+                    <span class="pill">yoga</span>
+                    <span class="pill">aqua-scaping</span>
+                    <span class="pill">reading</span>
+                </div>
+
+                <!-- single-element testimonials button using your SVG -->
+                <a href="#testimonials" class="btn-testimonials" aria-label="view testimonials">
+                    <img src="images/buttons/view-test.svg" alt="View testimonials" />
+                </a>
+            </div>
+        </div>
+
+        <div class="about-illu">
+            <img src="images/about-portrait.png" alt="Sketchbook and portrait" />
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS SECTION -->
+    <section id="testimonials" class="testimonials">
+        <div class="container">
+            <h2 class="t-title">Testimonials</h2>
+            <p class="t-sub">"A successful product is a result of what we, as people, as a team come together to create. Not what we can do alone"</p>
+
+        <div class="t-grid">
+            <!-- Card 1 - Maximillian -->
+            <article class="t-card">
+                <img class="avatar" src="images/testimonials/maximillian.jpg" alt="Maximillian Weinhold" />
+                <div class="meta">
+                    <h3>Maximillian Weinhold</h3>
+                    <p class="role">Chief Product Owner</p>
+                </div>
+                <p class="body">
+                    I have the pleasure of working with Shivangini, our lead UX designer at SiGREEN. She played a crucial role in shaping our product from day one, infusing it with her creative, driven, and fun personality. While Shivangini's creativity knows no bounds, beyond her design skills, Shivangini's unwavering drive and dedication to perfection have consistently pushed the UX team to achieve greatness. Her passion is contagious, inspiring everyone around her. What sets Shivangini apart is her infectious personality. She brings joy and fun to the workplace, and her positive energy fosters a collaborative environment where ideas flow freely, and creativity thrives. Our product truly embodies Shivangini's unique style and artistic flair. Her attention to detail and commitment to user-centered design set the standard in our market. I wholeheartedly recommend Shivangini as a lead UX designer. Her exceptional skills, enthusiasm, and fun-loving nature will undoubtedly take products to new heights and leave a lasting impression on users. I am grateful for the opportunity to work with Shivangini. Please feel free to reach out to me if you need more information.
+                </p>
+            </article>
+
+            <!-- Card 2 - Shivani -->
+            <article class="t-card">
+                <img class="avatar" src="images/testimonials/shivani-choudhary.jpg" alt="Shivani Choudhary" />
+                <div class="meta">
+                    <h3>Shivani Choudhary</h3>
+                    <p class="role">Senior Marketing Manager</p>
+                </div>
+                <p class="body">
+                    Shivangini's radical approach to her profession ensures that her presence is felt in the most demanding meeting rooms. I have witnessed how her unwavering commitment, holistic approach and genuineness have powered projects and won tough briefs. These traits remained consistent throughout, regardless of her work circumstances. Her superlative work ethic shines through and through. She is made for design- products, services, systems, experiences, and ventures across virtually every domain and industry. Her versatility makes her a dream professional in today's interdisciplinary world while speaking volumes of her nuanced work experience. Shivangini is also rare because she is someone you'd also want to know outside of work. Despite her deep experience and professional achievements, she remains humble, curious and spirited. She has an uncanny ability to connect with everyone. These skills explain her success as a team leader and will only make a stronger case for her as she progresses toward executive leadership roles. She'd be an asset to any organization and I will continue to follow her achievements with great interest.
+                </p>
+            </article>
+
+            <!-- Card 3 - Vinaya -->
+            <article class="t-card">
+                <img class="avatar" src="images/testimonials/vinaya.jpg" alt="Vinaya V" />
+                <div class="meta">
+                    <h3>Vinaya V</h3>
+                    <p class="role">Senior Software Engineer</p>
+                </div>
+                <p class="body">
+                    Shivangini is a motivated and versatile UX designer. I am working with her on a project which started off as a mere POC and has scaled up to draconian levels. Her UX/Visual designs are instrumental in scaling up by enabling the UI developer to create an application with pleasing aesthetics and adaptive functionalities. During our work we always had healthy discussions regarding where the product was moving towards. Our goals were never only on what comes now, but far reaching, where the product could go towards. Her empathy with the team is integral in keeping the show going. She always welcomes ideas and suggestions from everyone in the team to share their views and ideas which would then be distilled with the Partners product goals into a viable design. She never shirked from working on new issues. She always faced problems head-on and worked through or around issues so that timely solutions can be obtained. With Shivangini in the team, from envisioning the user journey to communication, she has it all covered.
+                </p>
+            </article>
+
+            <!-- Card 4 - Jiayu -->
+            <article class="t-card">
+                <img class="avatar" src="images/testimonials/jiayu.jpg" alt="Jiayu Dudderidge" />
+                <div class="meta">
+                    <h3>Jiayu Dudderidge</h3>
+                    <p class="role">VP Design Lead</p>
+                </div>
+                <p class="body">
+                    I had the pleasure of working with Shivangini, a talented and thoughtful Senior Designer. She combines strong design craft with excellent facilitation and analytical skills, and has a solid grasp of design frameworks and methods. Shivangini also understands business constraints well and makes design trade-offs when needed. I have always appreciated her creativity, enthusiasm, and collaborative way of working. She brings fresh ideas, clear thinking, and a positive mindset to every project. Shivangini is reliable, easy to work with, and communicates effectively with stakeholders. I would be more than happy to recommend her.
+                </p>
+            </article>
+
+            <!-- Card 5 - Bharatth -->
+            <article class="t-card">
+                <img class="avatar" src="images/testimonials/bharatth.jpg" alt="Bharatth Venkatesh" />
+                <div class="meta">
+                    <h3>Bharatth Venkatesh</h3>
+                    <p class="role">Co-Founder and CEO</p>
+                </div>
+                <p class="body">
+                    Shivangini is a delight to work with. Her experience and exuberance with regards to work is unparalleled. I had the privilege of working with her on couple of projects. Her illustrations are exemplary and her knowledge and skill is unmatched when it comes to UI/UX.
+                </p>
+            </article>
+        </div>
+        </div>
+    </section>
+    
+    <!-- Link to JavaScript file -->
+    <script src="script.js"></script>
+    
+    <!-- Auto-detect active page -->
+    <script>
+    document.querySelectorAll('.nav-link').forEach(link=>{
+      if(link.href === window.location.href) link.classList.add('active');
+    });
+    </script>
+    
+    <!-- page wipe overlay - DISABLED for about page -->
+    <div id="wipe" aria-hidden="true" style="display: none !important; opacity: 0 !important; pointer-events: none !important;"></div>
+    <script>
+    (function(){
+      // Force hide wipe overlay immediately
+      const wipe = document.getElementById('wipe');
+      if (wipe) {
+        wipe.style.display = 'none';
+        wipe.style.opacity = '0';
+        wipe.style.pointerEvents = 'none';
+        wipe.classList.remove('wipe--show');
+        wipe.classList.add('wipe--hide');
+      }
+
+      // Ensure page is visible
+      document.body.style.overflow = 'auto';
+      document.body.classList.remove('is-transitioning');
+      
+      // Force white background for about page
+      document.documentElement.style.background = '#ffffff';
+      document.body.style.background = '#ffffff';
+      document.body.style.color = '#000000';
+    })();
+    </script>
+    
+    <!-- Navigation Toggle Script -->
+    <script>
+      const toggle = document.getElementById('navToggle');
+      const drawer = document.getElementById('navDrawer');
+
+      function closeDrawer(){
+        if (!toggle || !drawer) return;
+        toggle.setAttribute('aria-expanded','false');
+        drawer.dataset.open = 'false';
+        drawer.setAttribute('aria-hidden','true');
+        toggle.querySelector('.pill-text').textContent = 'menu';
+        document.body.style.overflow = '';     // re-enable page scroll
+      }
+
+      if (toggle && drawer){
+        toggle.addEventListener('click', () => {
+          const open = toggle.getAttribute('aria-expanded') === 'true';
+          toggle.setAttribute('aria-expanded', String(!open));
+          drawer.dataset.open = String(!open);
+          drawer.setAttribute('aria-hidden', String(open));
+          toggle.querySelector('.pill-text').textContent = open ? 'menu' : 'close';
+          document.body.style.overflow = open ? '' : 'hidden'; // prevent bg scroll when open
+        });
+
+        // if user widens the window, force-close the drawer
+        window.addEventListener('resize', () => {
+          if (window.innerWidth > 800) closeDrawer();
+        });
+      }
+    </script>
+    
+    <!-- Scroll to top button -->
+    <button id="toTop" class="to-top" aria-label="Scroll to top">
+      <img src="images/buttons/scroll.svg" alt="Scroll to top" style="width: 56px; height: auto;">
+    </button>
+    
+    
+    <!-- Navigation dropdown elements -->
+    <div class="menu-scrim" hidden></div>
+    <nav class="menu-dropdown" hidden>
+      <a href="index.html#case-studies" data-link="work">work</a>
+      <a href="about.html"               data-link="about">about me</a>
+      <a href="blog.html"                data-link="blog">blog</a>
+      <a href="contact.html"             data-link="contact">contact me</a>
+    </nav>
+
+    <!-- Removed nav-failsafe.js - using nav-unified.js only -->
+    
+    <!-- Tighter dropdown styling -->
+    <style>
+      [data-nav="dropdown"] { min-width: 220px !important; }
+      [data-nav="dropdown"] a { font-size: 14px !important; padding: 10px 12px !important; }
+    </style>
+    
+    <!-- Removed inline nav patch that interfered with natural navigation -->
+
+    <script src="main.js" defer></script>
+    <script src="js/nav-unified.js"></script>
+</body>
+</html>

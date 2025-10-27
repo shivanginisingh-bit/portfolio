@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Meeting Summarisation - Case Study | the.shivangini.singh</title>
+    
+    <!-- Favicon (PNG) — use relative path (works for file:// too) -->
+    <link rel="icon" href="images/FAVICON.png" type="image/png" sizes="32x32">
+    <link rel="apple-touch-icon" href="images/FAVICON.png">
+    <link rel="shortcut icon" href="images/FAVICON.png">
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="case-study-full-page">
+    
+    <!-- Close Button -->
+    <button class="close-button" onclick="window.location.href='index.html#case-studies'">
+        <span class="close-text">close</span>
+        <span class="close-icon">✕</span>
+    </button>
+    
+    <!-- Back to Top Button -->
+    <button class="back-to-top-button" id="backToTop" onclick="scrollToTop()">
+        <div class="back-to-top-icon">↑</div>
+    </button>
+    
+    <!-- Case Study Image -->
+    <img 
+        src="images/ai-meeting-casestudy.png?v=2" 
+        alt="AI Meeting Summarisation - Complete Case Study"
+        class="case-study-full-image"
+    >
+    
+    <script>
+        // Show/hide buttons based on scroll position
+        window.addEventListener('scroll', function() {
+            const backToTopButton = document.getElementById('backToTop');
+            const closeButton = document.querySelector('.close-button');
+            
+            if (window.scrollY > 1024) {
+                backToTopButton.style.display = 'flex';
+                closeButton.style.display = 'none';
+            } else {
+                backToTopButton.style.display = 'none';
+                closeButton.style.display = 'flex';
+            }
+        });
+        
+        // Scroll to top function
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+    
+</body>
+</html>

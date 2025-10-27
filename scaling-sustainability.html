@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="en" class="theme--sustainability">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Scaling Sustainability - A comprehensive UX design case study by Shivangini Singh. Learn how sustainable design principles can create environmentally conscious user experiences that drive business impact.">
+    <meta name="keywords" content="sustainability UX design, environmental UX, sustainable design, green technology, eco-friendly interfaces, environmental impact design, sustainable user experience">
+    <title>Scaling Sustainability — Case study</title>
+    
+    <!-- Favicon (PNG) — use relative path (works for file:// too) -->
+    <link rel="icon" href="images/FAVICON.png" type="image/png" sizes="32x32">
+    <link rel="apple-touch-icon" href="images/FAVICON.png">
+    <link rel="shortcut icon" href="images/FAVICON.png">
+    
+    <!-- Open Graph Meta Tags for Social Sharing -->
+    <meta property="og:title" content="Scaling Sustainability - UX Design Case Study">
+    <meta property="og:description" content="A comprehensive UX design case study exploring sustainable design principles and environmental impact considerations in user experience design.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://the.shivangini.singh/scaling-sustainability.html">
+    
+    <!-- Link to external CSS file -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/buttons.css">
+    <link rel="stylesheet" href="css/nav-final.css">
+    <link rel="stylesheet" href="css/nav.v2.css">
+    
+    <!-- Google Fonts - for beautiful typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Prefetch for faster navigation -->
+    <link rel="prefetch" href="scaling-sustainability.html">
+    
+    <!-- Preload first UI images -->
+    <link rel="preload" as="image" href="scaling-sustainability/UI01.png">
+    <link rel="preload" as="image" href="scaling-sustainability/UI02.png">
+    
+    <!-- Case Study Scripts -->
+    <script defer src="js/content.js"></script>
+    <script defer src="js/case-study.js"></script>
+    
+    <!-- Page-specific theme colors -->
+    <style>
+      /* Force blue background with gradient - NO GREY */
+      html, body {
+        background: linear-gradient(180deg, #001034 0%, #001034 60%, #00224e 100%) !important;
+        background-color: #001034 !important;
+        color: #EAF2FF !important;
+      }
+
+      /* Clean banner + title approach like Risk & Controls */
+      .sustainability-banner {
+        position: relative;
+        height: 275px;
+        margin-left: calc(50% - 50vw);
+        margin-right: calc(50% - 50vw);
+        width: 100vw;
+        background: linear-gradient(180deg, #001034 0%, #001034 60%, #00224e 100%);
+        border-bottom-left-radius: 24px;
+        border-bottom-right-radius: 24px;
+        overflow: hidden;
+      }
+
+      .sustainability-banner__art {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url("scaling-sustainability/hero.png") center center / contain no-repeat;
+        opacity: 1;
+        z-index: 1;
+      }
+
+      /* Fallback - if background doesn't work, try img tag */
+      .sustainability-banner img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 1;
+      }
+
+      /* Override ALL global close button styles for sustainability page */
+      body .sustainability-close,
+      button.sustainability-close,
+      .sustainability-banner .sustainability-close,
+      .sustainability-close.close-button,
+      .sustainability-close.rc-close,
+      .sustainability-close.btn-close,
+      .sustainability-close.close-pill,
+      .sustainability-close.cs-close {
+        position: fixed !important;
+        top: 30px !important;
+        right: 30px !important;
+        z-index: 9999 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        padding: 8px 12px !important;
+        font-weight: 700 !important;
+        font-size: 13px !important;
+        border-radius: 20px !important;
+        border: 1px solid #000000 !important;
+        background: #6DD4B8 !important;
+        color: #000000 !important;
+        cursor: pointer !important;
+        transition: all 0.25s ease !important;
+        text-transform: lowercase !important;
+        box-shadow: none !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+      }
+
+      body .sustainability-close:hover,
+      button.sustainability-close:hover,
+      .sustainability-banner .sustainability-close:hover,
+      .sustainability-close.close-button:hover,
+      .sustainability-close.rc-close:hover,
+      .sustainability-close.btn-close:hover,
+      .sustainability-close.close-pill:hover,
+      .sustainability-close.cs-close:hover {
+        background: #5BC4A8 !important;
+        transform: scale(1.05) !important;
+        box-shadow: none !important;
+      }
+
+      .sustainability-intro {
+        padding: 40px 0;
+        background: transparent;
+      }
+
+      .sustainability-title {
+        font-weight: 800;
+        font-size: clamp(32px, 6vw, 56px);
+        letter-spacing: -0.02em;
+        margin: 0;
+        color: #ffffff;
+        text-align: left;
+      }
+
+      /* Content alignment - simple and clean */
+      .sustainability-content {
+        max-width: 1095px;
+        margin: 0 auto;
+        padding: 0 40px;
+      }
+
+      /* Extended width for disclaimer only */
+      .cs-section#interface .cs-disclaimer {
+        max-width: none;
+        width: calc(100vw - 80px);
+        margin-left: 0;
+        margin-right: 0;
+        padding-left: 0;
+        padding-right: 0;
+        position: relative;
+        left: 0;
+      }
+
+      .sustainability-watermark {
+        max-width: 1095px;
+        margin: 0 auto;
+        padding: 0 40px;
+        text-align: left;
+      }
+
+      /* Force left alignment for all sections */
+      .cs-section {
+        max-width: 1095px;
+        margin: 0 auto;
+        padding: 0 40px;
+      }
+
+      .cs-section .section-title,
+      .cs-section h2 {
+        text-align: left !important;
+        color: #EAF2FF !important;
+      }
+
+      .cs-section .cs-section__body,
+      .cs-section p {
+        text-align: left !important;
+        color: #B8C5D1 !important;
+      }
+
+      /* Impact cards alignment */
+      .cs-impact {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        margin-top: 20px;
+      }
+
+      .cs-impact-card {
+        text-align: left;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .cs-impact-card .impact-value {
+        font-size: 24px;
+        font-weight: 700;
+        color: #EAF2FF !important;
+        margin-bottom: 8px;
+      }
+
+      .cs-impact-card .impact-label {
+        font-size: 14px;
+        color: #B8C5D1 !important;
+        line-height: 1.4;
+      }
+
+      /* NDA Disclaimer styling */
+      .cs-disclaimer {
+        margin-top: 24px;
+        font-size: 13px;
+        line-height: 1.5;
+        color: #F6D66A;
+        text-align: left;
+        font-style: italic;
+        max-width: 100%;
+        width: 100%;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        hyphens: none;
+        white-space: normal;
+        text-rendering: optimizeLegibility;
+        -webkit-hyphens: none;
+        -moz-hyphens: none;
+        -ms-hyphens: none;
+      }
+
+      /* Roles section alignment */
+      .roles-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        margin-top: 20px;
+      }
+
+      .role-card {
+        text-align: left;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .role-card h3 {
+        color: #EAF2FF !important;
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        text-align: left;
+      }
+
+      .role-card ul {
+        margin: 0;
+        padding-left: 18px;
+        text-align: left;
+      }
+
+      .role-card li {
+        color: #B8C5D1 !important;
+        font-size: 14px;
+        line-height: 1.5;
+        margin-bottom: 8px;
+      }
+
+      .sustainability-subtitle {
+        font-size: 18px;
+        color: #EAF2FF;
+        margin: 8px 0 0 0;
+        text-align: left;
+      }
+
+      /* Fix Impact section colors */
+      .cs-impact .section-title,
+      .cs-impact h2 {
+        color: #EAF2FF !important;
+      }
+
+      .cs-impact .impact-value {
+        color: #EAF2FF !important;
+      }
+
+      .cs-impact .impact-label {
+        color: #B8C5D1 !important;
+      }
+
+      /* Hide the old close button */
+      .close-button {
+        display: none !important;
+      }
+      
+      /* Hero banner - clean blue, no grey overlay */
+      .cs-hero {
+        display: grid;
+        grid-template-columns: 1.15fr 1fr;
+        gap: clamp(24px, 4vw, 56px);
+        align-items: center;
+        padding: 120px 0 80px;
+        background: transparent !important;
+        width: 100% !important;
+        position: relative;
+      }
+      
+      /* Title text - white, left aligned, 140px from left */
+      .cs-hero__copy {
+        max-width: 800px;
+        padding-left: 140px; /* 140px from left as requested */
+      }
+      .cs-hero__copy h1.cs-title { 
+        margin: 0 0 .25em; 
+        font-size: clamp(40px, 7.5vw, 86px); 
+        line-height: .95;
+        color: #FFFFFF !important;
+        text-align: left !important;
+      }
+      .cs-sub { 
+        margin: 0 0 10px; 
+        opacity: .9;
+        color: #FFFFFF;
+      }
+      .cs-rule { 
+        width: 100%; 
+        height: 1px; 
+        background: rgba(255,255,255,.18); 
+        margin-top: 12px;
+      }
+      
+      /* Right-side illustration - centered, bigger banner */
+      .cs-hero__art { 
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-right: 140px; /* Match left padding for balance */
+      }
+      .cs-hero__art img { 
+        width: 100%; 
+        max-height: 800px; /* Increased from 600px to make banner bigger */
+        height: auto; 
+        border-radius: 16px; 
+        display: block;
+        object-fit: contain;
+      }
+      
+      /* CRITICAL: Remove ALL grey backgrounds from containers */
+      .cs-wrap, .cs, main, section, div, header {
+        background: transparent !important;
+        background-color: transparent !important;
+      }
+      
+      /* Ensure no overlay divs have grey */
+      *:not(.cs-hero__art):not(img) {
+        background-color: transparent !important;
+      }
+      
+      /* Sections - 80% REDUCTION (keeping 20% of original) */
+      :root {
+        --section-gap-default: 120px;
+      }
+      
+      .theme--sustainability .cs-section,
+      .theme--sustainability section {
+        padding-block: calc(var(--section-gap-default) * 0.10) !important;  /* 12px instead of 120px - 90% total reduction */
+        margin-block: calc(var(--section-gap-default) * 0.10) !important;
+      }
+      
+      .cs-section { 
+        padding-block: 12px;  /* 90% reduced from default 120px */
+      }
+      
+      /* Common spacers */
+      .theme--sustainability .spacer,
+      .theme--sustainability .section-spacer {
+        height: calc(var(--section-gap-default) * 0.10) !important;
+      }
+      .section-title { 
+        margin: 0 0 12px; 
+        font-size: clamp(22px, 3.2vw, 28px); 
+        color: var(--cs-accent, #5BE4C6); 
+      }
+      .cs-section__body { 
+        max-width: 70ch; 
+        opacity: .95; 
+      }
+      
+      /* Impact tiles - updated for new classes */
+      .cs-impact {
+        display: grid;
+        gap: 24px;
+        justify-items: start;
+      }
+      @media (min-width: 900px) {
+        .cs-impact {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+      .cs-impact-card {
+        width: 100%;
+        background: color-mix(in oklab, var(--cs-accent, #5BE4C6) 10%, transparent);
+        border: 1px solid color-mix(in oklab, var(--cs-accent, #5BE4C6) 45%, transparent);
+        border-radius: 14px;
+        padding: 16px 18px;
+      }
+      .impact-value { 
+        font-size: clamp(26px, 5.2vw, 38px); 
+        font-weight: 800; 
+        line-height: 1; 
+      }
+      .impact-label { 
+        margin-top: 6px; 
+        opacity: .9; 
+      }
+      
+      /* FORCE WHITE TEXT IN IMPACT SECTION */
+      .theme--sustainability #impact,
+      .theme--sustainability #impact *,
+      #impact,
+      #impact * {
+        color: #FFFFFF !important;
+        --text-color: #FFFFFF;
+      }
+      
+      #impact .impact-card,
+      #impact .impact-value,
+      #impact .impact-label {
+        color: #FFFFFF !important;
+      }
+      
+      /* Process media */
+      .cs-media--wide img { 
+        width: 100%; 
+        height: auto; 
+        border-radius: 14px; 
+        display: block; 
+      }
+      .cs-media figcaption { 
+        margin-top: 8px; 
+        opacity: .8; 
+        font-size: .95rem; 
+      }
+      
+      /* Fix Ecosystem Mapping corner radius */
+      #ecosystem .cs-media--wide,
+      #ecosystem figure {
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid rgba(121,255,233,0.5);
+        outline: none !important;
+      }
+      
+      #ecosystem .cs-media--wide img {
+        display: block;
+        width: 100%;
+        height: auto;
+        border-radius: inherit;
+      }
+      
+      /* Hide text below Ecosystem Mapping */
+      #ecosystem .eco-tiles,
+      #ecosystem .cs-section__body,
+      #ecosystem .section-desc,
+      #ecosystem p {
+        display: none !important;
+      }
+      
+      /* Hide text below Usability Testing */
+      #testing .test-bullets,
+      #testing .cs-section__body,
+      #testing .section-desc,
+      #testing ul {
+        display: none !important;
+      }
+      
+      /* KILL TOP NAV AND LOGO (CSS-only, works even if scripts/hydration timing changes) */
+      .theme--sustainability .site-nav,
+      .theme--sustainability .logo,
+      .theme--sustainability header .logo,
+      .theme--sustainability .primary-nav,
+      .theme--sustainability .brand,
+      .theme--sustainability header .brand,
+      .theme--sustainability .nav-links,
+      .theme--sustainability .menu-pill {
+        display: none !important;
+      }
+      
+      /* Keep header shell only as positioning anchor for Close */
+      .theme--sustainability header,
+      .theme--sustainability .site-header {
+        min-height: 0 !important;
+        padding-block: 0 !important;
+        border-bottom: none !important;
+      }
+      
+      /* CRITICAL: Ensure body can scroll */
+      html, body {
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+        height: auto !important;
+      }
+      
+      /* 1) REMOVE SUBTITLE UNDER H1 */
+      .theme--sustainability .hero-subtitle,
+      .theme--sustainability [data-id="hero-subtitle"],
+      .theme--sustainability .cs-sub,
+      .theme--sustainability .cs-hero__copy .cs-sub {
+        display: none !important;
+      }
+      
+      /* 2) NEUTRALIZE TEXT-TRANSFORM FOR TITLE CASE */
+      .theme--sustainability h1,
+      .theme--sustainability h2,
+      .theme--sustainability h3,
+      .theme--sustainability h4 {
+        text-transform: none !important;
+      }
+      
+      /* CLOSE BUTTON - IDENTICAL TO AI PAGE */
+      .close-pill,
+      .cs-close {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        height: 40px;                 /* match AI */
+        padding: 8px 16px;            /* match AI */
+        border-radius: 999px;
+        border: 1px solid currentColor;
+        font-weight: 500;
+        line-height: 1;
+        text-decoration: none;
+        cursor: pointer;
+        transition: transform .15s ease, opacity .15s ease;
+        background: transparent;
+        z-index: 1200;
+      }
+      
+      /* Scaling page position + color token */
+      .theme--sustainability .cs-close,
+      .theme--sustainability [data-id="close-btn"] {
+        position: fixed;
+        top: 30px;                    /* your spec */
+        right: 24px;
+        color: #39CDD8;               /* outline color via currentColor */
+        background: transparent;
+        border-color: #39CDD8;
+      }
+      
+      /* Hover/focus for parity with AI page */
+      .close-pill:hover,
+      .cs-close:hover {
+        transform: translateY(-1px);
+      }
+      
+      .close-pill:focus-visible,
+      .cs-close:focus-visible {
+        outline: 2px solid #39CDD8;
+        outline-offset: 2px;
+      }
+      
+      /* Unified scroll-to-top button (matches AI Meeting page) */
+      .pill-btn.to-top,
+      #toTop {
+        position: fixed;
+        right: 18px;
+        bottom: 18px;
+        width: 56px;
+        height: 56px;
+        border-radius: 999px;
+        display: grid;
+        place-items: center;
+        color: #fff;
+        background: rgba(255,255,255,0.02);
+        border: 2px solid rgba(255,255,255,0.92);
+        box-shadow: 0 10px 26px rgba(0,0,0,.45), inset 0 0 24px rgba(255,255,255,.06);
+        backdrop-filter: blur(2px);
+        cursor: pointer;
+        z-index: 55;
+        opacity: 0;
+        pointer-events: none;
+        transition: transform .15s ease, opacity .2s ease, background .2s ease, border-color .2s ease;
+        padding: 0;
+        font-size: 20px;
+        font-weight: 400;
+        line-height: 1;
+      }
+      
+      .pill-btn.to-top.visible,
+      #toTop.visible {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      
+      .pill-btn.to-top:hover,
+      #toTop:hover {
+        transform: translateY(-2px);
+        background: rgba(255,255,255,0.06);
+      }
+      
+      /* Theme-specific tweak for blue page */
+      .theme--sustainability .pill-btn.to-top,
+      .theme--sustainability #toTop {
+        background: rgba(0,16,52,0.5);
+        border-color: rgba(121,255,233,0.35);
+      }
+      
+      /* Roles grid */
+      .roles-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: clamp(14px, 2vw, 20px);
+      }
+      .role-card {
+        background: color-mix(in oklab, var(--cs-accent, #5BE4C6) 8%, transparent);
+        border: 1px solid color-mix(in oklab, var(--cs-accent, #5BE4C6) 40%, transparent);
+        border-radius: 12px;
+        padding: 16px 18px;
+      }
+      .role-card__heading { 
+        margin: 0 0 8px; 
+        font-size: 1rem; 
+        letter-spacing: .4px; 
+        opacity: .95; 
+      }
+      .role-card__list { 
+        margin: 0; 
+        padding-left: 18px; 
+        display: grid; 
+        gap: 6px; 
+      }
+      .role-card__list li { 
+        opacity: .92; 
+      }
+      
+      /* Ecosystem tiles */
+      .eco-tiles {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: clamp(12px, 2vw, 18px);
+        margin-top: 16px;
+      }
+      .eco-card {
+        background: color-mix(in oklab, var(--cs-accent, #5BE4C6) 8%, transparent);
+        border: 1px solid color-mix(in oklab, var(--cs-accent, #5BE4C6) 40%, transparent);
+        border-radius: 12px;
+        padding: 16px 18px;
+      }
+      .eco-card__title { 
+        margin: 0 0 6px; 
+        font-size: 1rem; 
+        letter-spacing: .2px; 
+      }
+      .eco-card__body { 
+        margin: 0; 
+        opacity: .92; 
+      }
+      
+      /* Small kicker line under h2 */
+      .cs-section__kicker { 
+        margin: 4px 0 16px; 
+        opacity: .9; 
+      }
+      
+      /* Universal content rail */
+      :root { --rail: clamp(16px, 6vw, 96px); }
+      
+      .cs-rail { 
+        padding-left: var(--rail); 
+        padding-right: var(--rail); 
+      }
+      .cs-rail > * { 
+        margin-left: 0; 
+      }
+      
+      /* titles + body keep same left start */
+      .cs-title, .cs-subtitle, .cs-body, .cs-list, .cs-image, .cs-disclaimer {
+        margin-left: 0;
+      }
+      
+      /* Watermark styling */
+      .cs-watermark {
+        position: static;
+        display: block;
+        width: 100%;
+        margin: 64px 0 0;
+        padding: 24px 0;
+        color: var(--muted-foreground, #9a9a9a);
+        font-size: 14px;
+        line-height: 1.4;
+        text-align: left;
+        border-top: 1px solid rgba(255,255,255,0.08);
+      }
+      
+      /* Hide any old sticky watermarks */
+      .sticky-watermark, .floating-watermark { 
+        display: none !important; 
+      }
+      
+      /* Impact section alignment */
+      .cs-impact { 
+        display: grid; 
+        gap: 24px; 
+        justify-items: start;
+      }
+      @media (min-width: 900px) {
+        .cs-impact { 
+          grid-template-columns: repeat(3, minmax(0, 1fr)); 
+        }
+      }
+      .cs-impact-card { 
+        width: 100%; 
+      }
+      
+      /* Section spacing */
+      .cs-section { 
+        margin-top: 40px; 
+      }
+      .cs-section.compact { 
+        margin-top: 24px; 
+      }
+      
+      /* Text next to image spacing */
+      .cs-split { 
+        display: grid; 
+        gap: 12px; 
+      }
+      @media (min-width: 900px) {
+        .cs-split { 
+          grid-template-columns: 1fr 1fr; 
+          gap: 24px; 
+        }
+      }
+      
+      .cs-image { 
+        margin: 0; 
+      }
+      .cs-image + .cs-body,
+      .cs-list + .cs-image,
+      .cs-body + .cs-image { 
+        margin-top: 12px; 
+      }
+      
+      /* Image alignment */
+      .cs-image,
+      .cs-figure {
+        display: block;
+        margin-left: 0;
+        max-width: 100%;
+      }
+      .cs-figure figcaption { 
+        margin-top: 8px; 
+        color: #aaa; 
+        font-size: 14px; 
+      }
+      
+      /* Disclaimer styling */
+      .cs-disclaimer {
+        margin-top: 24px;
+        font-size: 13px;
+        line-height: 1.5;
+        color: rgba(255,255,255,0.65);
+        max-width: 68ch;
+      }
+      
+      /* Interface grid: airy, consistent */
+      .ui-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: clamp(12px, 2vw, 18px);
+      }
+      .ui-card {
+        margin: 0;
+        background: var(--cs-panel, rgba(255,255,255,.04));
+        border: 1px solid var(--cs-stroke, rgba(255,255,255,.14));
+        border-radius: 12px;
+        overflow: hidden;
+        display: block;
+      }
+      .ui-card img { 
+        width: 100%; 
+        height: auto; 
+        display: block;
+        object-fit: cover;
+        border-radius: 12px;
+      }
+      
+      /* Ensure images are visible */
+      #interface .ui-grid,
+      #interface .ui-card,
+      #interface .ui-card img {
+        visibility: visible !important;
+        opacity: 1 !important;
+        z-index: 1;
+      }
+      
+      /* Testing bullets */
+      .test-bullets { 
+        margin: 14px 0 0; 
+        padding-left: 18px; 
+        display: grid; 
+        gap: 6px; 
+      }
+      .test-bullets li { 
+        opacity: .95; 
+      }
+      
+      /* Details row (small thumbs) */
+      .details-row {
+        display: flex;
+        gap: clamp(10px, 1.6vw, 16px);
+        flex-wrap: wrap;
+      }
+      .detail-card {
+        margin: 0;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--cs-stroke, rgba(255,255,255,.14));
+        background: var(--cs-panel, rgba(255,255,255,.04));
+        width: clamp(220px, 32vw, 360px);
+      }
+      .detail-card img { 
+        display: block; 
+        width: 100%; 
+        height: auto; 
+      }
+      
+      /* Audit grid (2-up) */
+      .audit-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: clamp(12px, 2vw, 18px);
+      }
+      .audit-card {
+        margin: 0;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--cs-stroke, rgba(255,255,255,.14));
+        background: var(--cs-panel, rgba(255,255,255,.04));
+      }
+      .audit-card img { 
+        width: 100%; 
+        height: auto; 
+        display: block; 
+      }
+      
+      /* NDA pill (italic yellow with padding) */
+      .nda-pill {
+        display: inline-block;
+        margin-top: 6px;
+        padding: 12px 14px;
+        border-radius: 12px;
+        font-style: italic;
+        color: #111;
+        background: #F6D66A;               /* your yellow */
+        border: 1px solid rgba(0,0,0,.18);
+      }
+      
+      /* Responsive */
+      @media (max-width: 1024px) {
+        .eco-tiles { 
+          grid-template-columns: repeat(2, 1fr); 
+        }
+      }
+      @media (max-width: 920px) {
+        .ui-grid { 
+          grid-template-columns: 1fr; 
+        }
+      }
+      @media (max-width: 900px) {
+        .cs-hero { 
+          grid-template-columns: 1fr; 
+        }
+        .cs-hero__art { 
+          order: 2; 
+        }
+        .cs-impact,
+        .roles-grid,
+        .audit-grid { 
+          grid-template-columns: 1fr; 
+        }
+      }
+      @media (max-width: 640px) {
+        .eco-tiles { 
+          grid-template-columns: 1fr; 
+        }
+      }
+    </style>
+</head>
+
+<body class="cs cs--sustainability theme-blue case-study scaling theme-sustainability cs-page case-study" data-cs-key="sustainability">
+    <!-- Force blue background immediately -->
+    <script>
+      (function(){
+        document.documentElement.style.background = '#001034';
+        document.body.style.background = '#001034';
+        document.documentElement.style.backgroundColor = '#001034';
+        document.body.style.backgroundColor = '#001034';
+      })();
+    </script>
+    
+    <header class="navv2-header" role="banner">
+      <div class="navv2-wrap">
+        <a class="navv2-brand" href="index.html">the.shivangini.singh</a>
+
+        <!-- Desktop links -->
+        <nav class="navv2-desktop" aria-label="Primary">
+          <a href="work.html" data-key="work">work</a>
+          <a href="about.html" data-key="about">about me</a>
+          <a href="blog.html" data-key="blog">blog</a>
+          <a href="contact.html" data-key="contact">contact me</a>
+        </nav>
+
+        <!-- Mobile pill -->
+        <button class="navv2-toggle" aria-expanded="false" aria-controls="navv2-panel">
+          <span class="navv2-toggle-label">menu</span>
+          <span class="navv2-toggle-icon" aria-hidden="true"></span>
+        </button>
+      </div>
+
+      <!-- Mobile panel -->
+      <div id="navv2-panel" class="navv2-panel" hidden>
+        <nav class="navv2-panel-inner" aria-label="Mobile menu">
+          <a class="navv2-link" href="about.html">about me</a>
+          <a class="navv2-link" href="work.html">work</a>
+          <a class="navv2-link" href="blog.html">blog</a>
+          <a class="navv2-link" href="contact.html">contact me</a>
+        </nav>
+      </div>
+    </header>
+    
+    <main class="cs-wrap">
+            
+            <!-- Close button (identical to AI page) -->
+            <button data-id="close-btn" class="close-button" type="button" aria-label="Close case study">
+              close <span aria-hidden="true">×</span>
+            </button>
+            
+            <!-- Banner: full-bleed with close pill -->
+            <section class="sustainability-banner">
+              <button class="sustainability-close" onclick="window.location.href='index.html#case-studies'" aria-label="Close case study" tabindex="0">close <span>✕</span></button>
+              <div class="sustainability-banner__art" aria-hidden="true"></div>
+              <img src="scaling-sustainability/hero.png" alt="Sustainability ecosystem hero" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1;">
+            </section>
+
+            <!-- Title on white, under banner -->
+            <section class="sustainability-intro">
+              <div class="sustainability-content">
+                <h1 class="sustainability-title">Scaling Sustainability</h1>
+                <p class="sustainability-subtitle">Measuring product carbon footprint across the supply chain.</p>
+                <p>I was part of the core team that saw the product go from a PoC to<br>a fully commercialised project. From sketches, to collaboration, workshops<br>and visual design. This project is so close to my heart!</p>
+              </div>
+            </section>
+            
+            <!-- Problem Statement -->
+            <section id="problem" class="cs-section">
+              <div class="sustainability-content">
+                <h2 class="section-title" data-bind="problem.title">Problem statement</h2>
+                <div class="cs-section__body">
+                  <p data-id="problem-statement" data-bind="problem.body">Building a software that would help manufacturing companies calculate their Product's carbon footprint along the supply chain, and ensuring that the shared data was not only transparent, trusted, but also remained confidential.</p>
+                </div>
+              </div>
+            </section>
+            
+            <!-- Impact -->
+            <section id="impact" class="cs-section">
+              <div class="sustainability-content">
+                <h2 class="section-title">Impact</h2>
+                <div class="cs-impact">
+                  <article class="cs-impact-card">
+                    <div class="impact-value">200+</div>
+                    <div class="impact-label">global companies onboarded</div>
+                  </article>
+                  <article class="cs-impact-card">
+                    <div class="impact-value">500+</div>
+                    <div class="impact-label">active users on platform</div>
+                  </article>
+                  <article class="cs-impact-card">
+                    <div class="impact-value">building</div>
+                    <div class="impact-label">ecosystem for sustainable growth</div>
+                  </article>
+                </div>
+              </div>
+            </section>
+            
+            <!-- Process -->
+            <section id="process" class="cs-section">
+              <div class="sustainability-content">
+                <h2 class="section-title" data-bind="process.title">Process</h2>
+                <figure class="cs-media cs-media--wide">
+                  <img data-bind="process.media" src="scaling-sustainability/process-journey.png" alt="Process overview" loading="lazy" decoding="async" />
+                  <figcaption data-bind="process.caption"></figcaption>
+                </figure>
+              </div>
+            </section>
+            
+            <!-- My Role & Contribution -->
+            <section id="roles" class="cs-section">
+              <div class="sustainability-content">
+                <h2 class="section-title">My role & contribution</h2>
+                <div class="roles-grid">
+                <article class="role-card">
+                  <h3>UX CONTRIBUTIONS</h3>
+                  <ul>
+                    <li>Conducting UX workshops with stakeholders to understand the business/product requirement in detail.</li>
+                    <li>Secondary research</li>
+                    <li>User journey mapping</li>
+                    <li>Insight generation</li>
+                    <li>Data visualization</li>
+                    <li>Ecosystem mapping</li>
+                    <li>Persona mapping</li>
+                    <li>Information architecture</li>
+                    <li>Process documentation for project management & leadership presentation.</li>
+                  </ul>
+                </article>
+
+                <article class="role-card">
+                  <h3>UI CONTRIBUTIONS</h3>
+                  <ul>
+                    <li>UI Flow with concept sketches and low-fi wireframe.</li>
+                    <li>Creation of design system, use case specific, iconography definition.</li>
+                    <li>Design demo to the development team.</li>
+                    <li>UI changes & refinements.</li>
+                    <li>Vision prototyping & concept testing.</li>
+                    <li>UI development support & VD reviews of the developed design.</li>
+                  </ul>
+                </article>
+
+                <article class="role-card">
+                  <h3>PRODUCT MANAGEMENT</h3>
+                  <ul>
+                    <li>UX review of the developed design.</li>
+                    <li>Collaboration with various scrums teams for product development.</li>
+                    <li>Ensuring UX maturity of the product.</li>
+                    <li>Requirement understanding of the upcoming release.</li>
+                    <li>Prioritization of UX stories for release and development.</li>
+                    <li>Product enhancement as per customers & business ask/feedback.</li>
+                    <li>Proactively working towards enhancement and improving product's roadmap</li>
+                    <li>Design demo and presentation to the leadership team.</li>
+                  </ul>
+                </article>
+                </div>
+              </div>
+            </section>
+            
+            <!-- UX Workshops -->
+            <section id="workshops" class="cs-section compact">
+              <div class="sustainability-content">
+                <h2 class="section-title" data-bind="workshops.title">UX Workshops</h2>
+                <figure class="cs-media cs-media--wide">
+                  <img data-bind="workshops.media" src="scaling-sustainability/workshops.png" alt="Workshop boards" loading="lazy" decoding="async" />
+                  <figcaption data-bind="workshops.caption">Co-creation with product, engineering, and 40+ supplier stakeholders to align on PCF data flows and handoffs.</figcaption>
+                </figure>
+              </div>
+            </section>
+            
+            <!-- Ecosystem & Personas -->
+            <section id="ecosystem" class="cs-section">
+              <div class="sustainability-content">
+                <h2 class="section-title" data-bind="ecosystem.title">Ecosystem & personas</h2>
+
+                <figure class="cs-media cs-media--wide">
+                  <img data-bind="ecosystem.hero" src="scaling-sustainability/ecosystem-hero.png" alt="Ecosystem and persona relationships" loading="lazy" decoding="async" />
+                </figure>
+
+                <div class="eco-tiles" data-bind="ecosystem.tiles"></div>
+              </div>
+            </section>
+            
+            <!-- Interface Design -->
+            <section id="interface" class="cs-section">
+              <div class="sustainability-content">
+                <h2 class="section-title">interface design</h2>
+                
+                <!-- NDA Disclaimer -->
+                <p class="cs-disclaimer">
+                  All screens are either recreated or blurred to comply with NDA. Sensitive information has&nbsp;been anonymized; visuals are intended solely to illustrate design thinking and evolution.
+                </p>
+
+                <div class="ui-grid">
+                <figure class="ui-card">
+                  <img src="scaling-sustainability/UI01.png" alt="UI 01 screen" loading="lazy" decoding="async">
+                </figure>
+                <figure class="ui-card">
+                  <img src="scaling-sustainability/UI02.png" alt="UI 02 screen" loading="lazy" decoding="async">
+                </figure>
+                <figure class="ui-card">
+                  <img src="scaling-sustainability/UI03.png" alt="UI 03 screen" loading="lazy" decoding="async">
+                </figure>
+                <figure class="ui-card">
+                  <img src="scaling-sustainability/UI04.png" alt="UI 04 screen" loading="lazy" decoding="async">
+                </figure>
+                <figure class="ui-card">
+                  <img src="scaling-sustainability/UI05.png" alt="UI 05 screen" loading="lazy" decoding="async">
+                </figure>
+                <figure class="ui-card">
+                  <img src="scaling-sustainability/UI06.png" alt="UI 06 screen" loading="lazy" decoding="async">
+                </figure>
+                </div>
+              </div>
+            </section>
+
+            <!-- Usability Testing -->
+            <section id="testing" class="cs-section">
+              <div class="sustainability-content">
+                <h2 class="section-title" data-bind="testing.title">Usability testing</h2>
+
+                <figure class="cs-media cs-media--wide">
+                  <img data-bind="testing.media" src="scaling-sustainability/testing.png" alt="Usability testing session montage" loading="lazy" decoding="async" />
+                </figure>
+
+                <ul class="test-bullets" data-bind="testing.bullets"></ul>
+              </div>
+            </section>
+            
+            <!-- Other project details -->
+            <section id="details" class="cs-section">
+              <div class="sustainability-content">
+                <h2 class="section-title" data-bind="details.title">Other project details</h2>
+                <figure class="cs-media cs-media--wide">
+                  <img src="scaling-sustainability/workshop-germany.png" alt="Workshop in Germany" loading="lazy" decoding="async" />
+                </figure>
+              </div>
+            </section>
+
+            <!-- Audit & iterations -->
+            <section id="audit" class="cs-section">
+              <div class="sustainability-content">
+                <h2 class="section-title" data-bind="audit.title">Audit & iterations</h2>
+                <figure class="cs-media cs-media--wide">
+                  <img src="scaling-sustainability/audit&iterations.png" alt="Audit and iterations overview" loading="lazy" decoding="async" />
+                </figure>
+              </div>
+            </section>
+
+            
+    </main>
+    
+    <!-- Scroll-to-top (unified with AI Meeting page) -->
+    <button id="toTop" class="pill-btn to-top" type="button" aria-label="Scroll to top" title="Back to top">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M6 14l6-6 6 6"></path>
+      </svg>
+    </button>
+    
+    <!-- Watermark -->
+    <footer class="sustainability-watermark">© Shivangini Singh — Scaling Sustainability</footer>
+    
+    <!-- Close button handler -->
+    <script>
+      const closeBtn = document.querySelector('[data-id="close-btn"]');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+          window.location.href = 'index.html#case-studies';
+        });
+      }
+      
+      // Keyboard accessibility - Escape key to close
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          const closeButton = document.querySelector('[data-id="close-btn"], .sustainability-close');
+          if (closeButton && closeButton.offsetParent !== null) {
+            closeButton.click();
+          }
+        }
+      });
+      
+      // Scroll-to-top visibility + behavior (unified with AI Meeting)
+      const toTop = document.getElementById('toTop');
+      if (toTop){
+        const toggle = () => {
+          if (window.scrollY > 400) {
+            toTop.classList.add('visible');
+          } else {
+            toTop.classList.remove('visible');
+          }
+        };
+        window.addEventListener('scroll', toggle, {passive:true});
+        toggle();
+        toTop.addEventListener('click', ()=> window.scrollTo({top:0, behavior:'smooth'}));
+      }
+    </script>
+    
+    <!-- Load order: content first, then hydrate -->
+    <script src="js/content.js"></script>
+    <script src="js/hydrate.js"></script>
+    
+    <!-- Title Case Conversion Script (Fixed) -->
+    <script>
+      (function () {
+        const lower = new Set(['a','an','and','the','but','or','for','nor','on','at','to','from','by','of','in','with']);
+        const isAllCaps = s => s.length>1 && s === s.toUpperCase();
+
+        function titleCase(str){
+          return str
+            .split(/(\s+|[-–—:&/])/g)                 // keep separators
+            .map((tok,i)=>{
+              if (/^\s+$|[-–—:&\/]$/.test(tok)) return tok; // keep separators/spaces
+              if (isAllCaps(tok)) return tok;               // keep acronyms (UI, WCAG, UX, PCF)
+              const base = tok.toLowerCase();
+              if (i!==0 && lower.has(base)) return base;
+              return base.charAt(0).toUpperCase()+base.slice(1);
+            }).join('');
+        }
+
+        const scope = document.querySelector('.theme--sustainability') || document;
+        let isApplying = false; // prevent infinite loop
+        
+        const apply = () => {
+          if (isApplying) return;
+          isApplying = true;
+          
+          scope.querySelectorAll('h1,h2,h3,h4').forEach(h=>{
+            const t = h.textContent.trim();
+            // Skip title case conversion for "Problem statement" to keep it as is
+            if (t === 'Problem statement') {
+              return; // Skip this heading
+            }
+            const transformed = titleCase(t);
+            if (t && h.textContent !== transformed) {
+              h.textContent = transformed;
+            }
+          });
+          
+          setTimeout(() => { isApplying = false; }, 50);
+        };
+
+        // run after DOM + after content.js hydration
+        if (document.readyState !== 'loading') {
+          setTimeout(apply, 100);
+        } else {
+          document.addEventListener('DOMContentLoaded', () => setTimeout(apply, 100));
+        }
+        
+        // Watch for hydration changes (with debounce to prevent loops)
+        let timeout;
+        const observer = new MutationObserver(() => {
+          clearTimeout(timeout);
+          timeout = setTimeout(apply, 200);
+        });
+        observer.observe(scope, {childList:true, subtree:true});
+      })();
+    </script>
+    
+    <!-- Floating Icons Hydration Script -->
+    <script>
+      (function(){
+        // Helper: URL-encode your filenames that have spaces, &, commas, etc.
+        const icon = (file, label) => ({
+          src: `scaling-sustainability/icons/${encodeURIComponent(file)}`,
+          label
+        });
+
+        // Map your exact filenames -> tooltip text
+        const ICONS = [
+          icon('creative & innovative.png', 'Creative & Innovative'),
+          icon('Data visualization.png', 'Data Visualization'),
+          icon('Design system & Accessibility.png', 'Design System & Accessibility'),
+          icon('Empathetic.png', 'Empathetic'),
+          icon('love dogs.png', 'Dog Lover'),
+          icon('nature lover.png', 'Nature Lover'),
+          icon('UJM, blueprinting.png', 'UJM & Service Blueprinting'),
+          icon('user interaction design.png', 'User Interaction Design'),
+          icon('Won - Werner Von Siemens.png', 'Werner von Siemens Award (Winner)')
+        ];
+
+        const root = document.querySelector('.theme--sustainability .floating-icons');
+        if (!root) return;
+
+        // Generate icon buttons with tooltips
+        root.innerHTML = ICONS.map(i => `
+          <button class="fi" type="button" role="listitem" aria-label="${i.label}">
+            <img src="${i.src}" alt="">
+            <span class="fi-tip">${i.label}</span>
+          </button>
+        `).join('');
+
+        // Click toggles active state (gold) + keeps tooltip visible
+        root.querySelectorAll('.fi').forEach(btn => {
+          btn.addEventListener('click', () => {
+            btn.classList.toggle('is-active');
+          });
+        });
+      })();
+    </script>
+
+    
+    
+    <!-- Navigation active state -->
+    <script src="nav.js" defer></script>
+    <script defer src="js/nav.v2.js"></script>
+    
+    <!-- Scroll-to-top functionality -->
+    <script>
+      (() => {
+        const btn = document.getElementById('scrollTop');
+        if (!btn) return;
+        
+        const showAfter = 600;
+        const onScroll = () => btn.classList.toggle('is-hidden', window.scrollY <= showAfter);
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+        
+        btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+      })();
+    </script>
+    <script src="js/safe-nav.js" defer></script>
+</body>
+</html>

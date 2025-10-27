@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Contact Shivangini Singh - UX Designer. Get in touch for design projects and collaborations">
+    <title>Contact Me - the.shivangini.singh</title>
+    
+    <!-- Favicon (PNG) — use relative path (works for file:// too) -->
+    <link rel="icon" href="images/FAVICON.png" type="image/png" sizes="32x32">
+    <link rel="apple-touch-icon" href="images/FAVICON.png">
+    <link rel="shortcut icon" href="images/FAVICON.png">
+    
+    <!-- Link to external CSS file -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/buttons.css">
+    <link rel="stylesheet" href="css/nav.v2.css">
+    <link rel="stylesheet" href="css/nav-final.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="theme-light contact-page contact">
+    <!-- Header -->
+    <header class="site-header" data-theme="light">
+      <div class="nav-wrap">
+        <a class="brand" href="index.html">the.shivangini.singh</a>
+
+        <!-- mobile dropdown trigger -->
+        <button class="nav-pill" id="navBtn" data-nav="menu-btn" aria-expanded="false">
+          <span data-nav="label">menu</span>
+          <span class="nav-icon" aria-hidden="true"></span>
+        </button>
+
+        <!-- desktop inline links -->
+        <nav class="nav-inline" aria-label="Primary">
+          <a href="index.html#case-studies" data-nav="work">work</a>
+          <a href="about.html" data-nav="about">about me</a>
+          <a href="https://medium.com/@shivanginisingh" data-nav="blog" target="_blank" rel="noopener">blog</a>
+          <a href="contact.html" data-nav="contact">contact me</a>
+        </nav>
+
+        <!-- mobile sheet -->
+        <div class="nav-sheet" id="navSheet" hidden>
+          <nav class="nav-list" aria-label="Primary mobile">
+            <a href="about.html" data-nav="about">about me</a>
+            <a href="index.html#case-studies"  data-nav="work">work</a>
+            <a href="https://medium.com/@shivanginisingh" data-nav="blog" target="_blank" rel="noopener">blog</a>
+            <a href="contact.html" data-nav="contact">contact me</a>
+          </nav>
+        </div>
+        <div class="nav-scrim" id="navScrim" hidden></div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <section class="contact-hero">
+        <div class="contact-inner">
+            <div class="contact-left">
+                <h1>let's<br>connect<br>&amp; work</h1>
+
+                <ul class="contact-details">
+                    <li>
+                        <img src="assets/rc/location.png" alt="Location" class="contact-icon" />
+                        <div>
+                            <strong>Location</strong> Bangalore, India
+                        </div>
+                    </li>
+                    <li>
+                        <img src="assets/rc/email.png" alt="Email" class="contact-icon" />
+                        <div>
+                            <strong>Email</strong> 
+                            <a href="mailto:shivangini.singh@gmail.com">shivangini.singh@gmail.com</a>
+                        </div>
+                    </li>
+                    <li>
+                        <img src="assets/rc/call.png" alt="Mobile" class="contact-icon" />
+                        <div>
+                            <strong>Mobile</strong> +91 776 0833 801
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="contact-right">
+                <!-- Single large floating icon -->
+                <div class="floating-icons">
+                    <div class="floating-icon icon-1"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Toast (screen-reader friendly) -->
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden>
+      message sent — thank you!
+    </div>
+    
+    
+    <script src="main.js" defer></script>
+    <!-- Navigation Toggle Script -->
+    <script>
+      const toggle = document.getElementById('navToggle');
+      const drawer = document.getElementById('navDrawer');
+
+      function closeDrawer(){
+        if (!toggle || !drawer) return;
+        toggle.setAttribute('aria-expanded','false');
+        drawer.hidden = true;
+        toggle.querySelector('.pill-text').textContent = 'menu';
+        document.body.style.overflow = '';     // re-enable page scroll
+      }
+
+      if (toggle && drawer){
+        toggle.addEventListener('click', () => {
+          const open = toggle.getAttribute('aria-expanded') === 'true';
+          toggle.setAttribute('aria-expanded', String(!open));
+          drawer.hidden = open;
+          toggle.querySelector('.pill-text').textContent = open ? 'menu' : 'close';
+          document.body.style.overflow = open ? '' : 'hidden'; // prevent bg scroll when open
+        });
+
+        // if user widens the window, force-close the drawer
+        window.addEventListener('resize', () => {
+          if (window.innerWidth > 800) closeDrawer();
+        });
+      }
+    </script>
+
+    <!-- Navigation dropdown elements -->
+    <div class="menu-scrim" hidden></div>
+    <nav class="menu-dropdown" hidden>
+      <a href="index.html#case-studies" data-link="work">work</a>
+      <a href="about.html"               data-link="about">about me</a>
+      <a href="https://medium.com/@shivanginisingh" data-link="blog" target="_blank" rel="noopener">blog</a>
+      <a href="contact.html"             data-link="contact">contact me</a>
+    </nav>
+
+    <!-- Removed nav-failsafe.js - using nav-unified.js only -->
+    
+    <!-- Tighter dropdown styling + Contact icons offset fix -->
+    <style>
+      [data-nav="dropdown"] { min-width: 220px !important; }
+      [data-nav="dropdown"] a { font-size: 14px !important; padding: 10px 12px !important; }
+      /* Contact icons offset fix */
+      .contact-floating-icons { transform: translateX(-100px); }
+    </style>
+    
+    <!-- Removed inline nav patch that interfered with natural navigation -->
+    <script src="js/nav-unified.js"></script>
+</body>
+</html>
+
